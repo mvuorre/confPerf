@@ -112,12 +112,3 @@ dat %>%
   spread(exp, item, fill = " ") %>% 
   write_csv("tab.txt")
 ```
-
-# Session information
-
-```{r sessioninfo, layout="l-body-outset"}
-options(width=140)
-library(sessioninfo)
-session_info()
-options(width=125)
-```

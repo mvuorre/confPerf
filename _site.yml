@@ -1,7 +1,7 @@
 name: "math-confidence"
 title: "Confidence in Mathematics"
 output_dir: "docs"
-exclude: ["data-raw", "data", "trash", "*.bib"]
+exclude: ["data-raw", "data", "trash", "packrat", "*.bib"]
 navbar:
   right:
     - text: "Description"

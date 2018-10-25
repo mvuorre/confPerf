@@ -9,3 +9,6 @@ site_libs/
 docs/
 # Temporary data and model objects
 *.rda
+# Packrat
+packrat/lib*/
+packrat/src*/
