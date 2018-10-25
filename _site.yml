@@ -3,11 +3,6 @@ title: "Confidence in Mathematics"
 output_dir: "docs"
 exclude: ["data-raw", "data", "trash", "*.bib"]
 navbar:
-  left:
-    - icon: fab fa-github
-      href: https://github.com/mvuorre/mathPerfConf
-    - text: "OSF"
-      href: https://osf.io/np3cu/
   right:
     - text: "Description"
       href: index.html
@@ -27,4 +22,8 @@ navbar:
           href: Experiment-6.html
     - text: "Simulation study"
       href: simulation.html
+    - icon: fab fa-github
+      href: https://github.com/mvuorre/mathPerfConf
+    - text: "OSF"
+      href: https://osf.io/np3cu/
 output: radix::radix_article

@@ -1,3 +1,7 @@
+---
+title: "Math Metacognition"
+---
+
 # Confidence in mathematics data and analyses
 
 Matti Vuorre <mv2521@columbia.edu>
