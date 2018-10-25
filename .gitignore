@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+# Folders
+data-raw/
+trash/
+site_libs/
+docs/
+# Temporary data and model objects
+*.rda

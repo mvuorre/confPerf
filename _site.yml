@@ -1,0 +1,30 @@
+name: "math-confidence"
+title: "Confidence in Mathematics"
+output_dir: "docs"
+exclude: ["data-raw", "data", "trash", "*.bib"]
+navbar:
+  left:
+    - icon: fab fa-github
+      href: https://github.com/mvuorre/mathPerfConf
+    - text: "OSF"
+      href: https://osf.io/np3cu/
+  right:
+    - text: "Description"
+      href: index.html
+    - text: "Experiments" 
+      menu:
+        - text: "Experiment 1"
+          href: Experiment-1.html
+        - text: "Experiment 2"
+          href: Experiment-2.html
+        - text: "Experiment 3"
+          href: Experiment-3.html
+        - text: "Experiment 4"
+          href: Experiment-4.html
+        - text: "Experiment 5"
+          href: Experiment-5.html
+        - text: "Experiment 6"
+          href: Experiment-6.html
+    - text: "Simulation study"
+      href: simulation.html
+output: radix::radix_article
