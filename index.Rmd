@@ -57,7 +57,7 @@ Because of these differences in scales, we have binned confidence ratings to six
 ## Variables
 
 ```{r, eval = T}
-dat <- read_csv("data/merged.csv")
+dat <- read_csv("data/merged.csv", guess_max = 25000)
 dat
 ```
 
@@ -111,4 +111,13 @@ dat %>%
   mutate(problem = 1:n()) %>% 
   spread(exp, item, fill = " ") %>% 
   write_csv("tab.txt")
+```
+
+# Session information
+
+```{r sessioninfo, layout="l-body-outset"}
+options(width=140)
+library(sessioninfo)
+session_info()
+options(width=125)
 ```
