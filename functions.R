@@ -1,9 +1,5 @@
 # Function used in data analysis and simulations
 
-library(Hmisc)
-library(vcdExtra)
-library(ordinal)
-
 #' metrics: Function to estimate performance and resolution metrics
 #'
 #' @param data A data.frame (or equivalent)
@@ -33,7 +29,7 @@ metrics <- function(data,
   if (!is.null(confidence)) {
     con <- data[[confidence]]
     gamma <- tryCatch({
-      rcorr.cens(accuracy, con, outx = TRUE)[2]
+      Hmisc::rcorr.cens(accuracy, con, outx = TRUE)[2]
     },
     error = function(e) return(NA)
     )
@@ -46,7 +42,7 @@ metrics <- function(data,
   } else {
     # Otherwise use ordinal variable
     gamma <- tryCatch({
-      GKgamma(table(accuracy, conK))$gamma
+      vcdExtra::GKgamma(table(accuracy, conK))$gamma
     },
     error = function(e) return(NA)
     )
@@ -55,7 +51,7 @@ metrics <- function(data,
     },
     error = function(e) return(NA)
     )
-    con_m <- mean(conK, na.rm = T)
+    con_m <- mean(as.integer(conK), na.rm = T)
   }
 
 
@@ -65,8 +61,10 @@ metrics <- function(data,
   # Get SDT measures with linear regression of zROC
   # Correct for zero observations in empty cells by ensuring all cells
   # exist...
-  sdt <- data.frame(accuracy = factor(accuracy, levels = 0:1), 
-                    conK = factor(conK, levels=0:(levels-1)))
+  sdt <- data.frame(
+    accuracy = factor(accuracy, levels = 0:1), 
+    conK = factor(conK, levels = 0:(levels-1))
+  )
   sdt <- data.frame(table(sdt))
   # ... and then add .5 to all cells
   sdt$Freq <- sdt$Freq + .5
@@ -89,8 +87,8 @@ metrics <- function(data,
 
   # SDT measures using ordinal regression
   if (ordinal) {
-    d_ord <- tryCatch({
-      fit <- clm(
+    sdt_metrics_ord <- tryCatch({
+      fit <- ordinal::clm(
         ordered(conK) ~ factor(accuracy),
         link = "probit",
         scale = ~accuracy,
@@ -104,7 +102,7 @@ metrics <- function(data,
     }, error = function(x) {
       return(cbind(da_ord = NA, d_ord = NA, s_ord = NA))
     })
-    sdt_metrics <- cbind(sdt_metrics, d_ord)
+    sdt_metrics <- cbind(sdt_metrics, sdt_metrics_ord)
   }
 
   data.frame(gamma, sdt_metrics, r, p, n, con_m, row.names = NULL)
