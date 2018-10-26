@@ -57,7 +57,7 @@ Because of these differences in scales, we have binned confidence ratings to six
 ## Variables
 
 ```{r, eval = T}
-dat <- read_csv("data/merged.csv", guess_max = 25000)
+dat <- read_csv("data/merged.csv")
 dat
 ```
 
