@@ -6,9 +6,8 @@
 data-raw/
 trash/
 site_libs/
-docs/
+# Output files
+docs/README.html
+docs/**/*.pdf
 # Temporary data and model objects
 *.rda
-# Packrat
-packrat/lib*/
-packrat/src*/
