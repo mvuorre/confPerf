@@ -427,39 +427,6 @@ dat_metrics %>%
   theme(aspect.ratio=1)
 ```
 
-We observed a positive correlation between performance and resolution (both metrics) in every experiment. We now investigate whether this correlation is plausibly due to the confound illustrated by our simulation. First, we visually compare the observed correlation to the simulated mean estimates under guessing. For each experiment, we show the simulation results from the nearest delta to the experiment's mean d_ord
-
-```{r sims-vs-data-plot, layout="l-page", fig.width=8, fig.height=4, fig.cap="Comparison of observed correlations to simulation results."}
-tmp <- dat_metrics %>% 
-  group_by(exp) %>% 
-  summarise(d_ord = mean(d_ord, na.rm=T), s = mean(s, na.rm=T)) %>% 
-  group_by(exp) %>% 
-  mutate(d_gen = delta_bins[which.min(abs(d_ord - delta_bins))]) %>% 
-  inner_join(sims_long) %>% 
-  filter(p_guess == 0.25)
-tmp %>% 
-  ggplot(aes(p_know, estimate)) +
-  scale_x_continuous("Performance", 
-                     breaks = c(0.0, .2, .4, .6, .8, 1),
-                     labels = c("0", ".2", ".4", ".6", ".8", "1")) +
-  scale_y_continuous("Estimate", breaks = pretty_breaks()) +
-  facet_grid(parameter~exp, scales="free_y") +
-  theme(legend.position = "none") +
-  geom_point(data = gather(dat_metrics, parameter, value, da, gamma), 
-             aes(x = p_know, y = value), 
-             col = "black", shape=1, size = .25, alpha = .5) +
-  geom_smooth(data = gather(dat_metrics, parameter, value, da, gamma), 
-              aes(x = p_know, y = value), lty=2,
-              method = "loess", span=2, size=.66, se=T, alpha=.33, col="black") +
-  geom_line(size = 1, aes(col=d_gen)) +
-  scale_color_viridis_c("Resolution", 
-                        values = rescale(tmp$d_gen, 
-                                         to = c(0, 1))) +
-  theme(panel.spacing.x = unit(10, "pt"))
-```
-
-As can be seen, the simulated mean estimates (at the experiment's mean d and guessing = 0.25) are able to explain at least some part of the observed correlations between performance and resolution. The gray ribbon in each panel indicates 95% Confidence Interval of the local regression line.
-
 ## Regression test
 
 We then tested whether the performance-resolution metric regression slopes were significantly steeper in the data, vs the equivalent slope in the simulations. We used second degree polynomial regressions. We tested
