@@ -1,0 +1,358 @@
+---
+title: '`r paste("Experiment", params$experiment)`'
+description: |
+  Data analysis for Experiment `r params$experiment`.
+author:
+  - name: Matti Vuorre 
+    affiliation: Columbia University
+date: "`r Sys.Date()`"
+output: 
+  radix::radix_article:
+    toc: true
+    toc_depth: 1
+    self_contained: false
+    lib_dir: "docs/site_libs"
+params:
+  experiment: 3
+---
+
+```{r setup, include=FALSE}
+source("functions.R")
+library(knitr)
+library(summarytools)
+library(tidyverse)
+library(broom)
+library(scales)
+library(patchwork)
+library(lme4)
+library(afex)
+library(emmeans)
+opts_chunk$set(
+  echo = FALSE,
+  error = TRUE,
+  eval = TRUE,
+  dev = c("png", "pdf"),
+  fig.ext = c("png", "pdf"),
+  fig.retina = 2
+)
+theme_set(theme_linedraw() + theme(panel.grid = element_blank()))
+```
+
+# Data description
+
+```{r create-data}
+dat <- read_csv("data/merged.csv", guess_max = 25000)
+
+# Get data for this experiment only
+dat <- filter(dat, exp == params$experiment)
+
+# Drop excluded subjects
+dat <- filter(dat, !exclude)
+
+# Drop factor levels of subject used in other experiments
+dat$subject <- fct_drop(dat$subject)
+```
+
+```{r metrics-summarise, results = 'asis'}
+dat_metrics <- dat %>%
+  nest(-subject) %>%
+  mutate(res = map(data, metrics, ordinal = TRUE)) %>%
+  unnest(res, .drop = TRUE)
+# Summarize
+dat_metrics %>% 
+  select(-contains("s")) %>%
+  descr(stats = c("mean", "sd", "min", "q1", "q3", "max", "n.valid", "pct.valid"), 
+        round.digits = 2, style = "rmarkdown")
+```
+
+
+# Math performance
+
+ANOVA of proportion correct on session. We use same exclusion rules as above but at the session level. ANOVA only considers subjects who had observations at each session; thus we also fit a random intercept linear regression to include everyone.
+
+```{r math-performance-sessions}
+exclude_threshold <- 3
+
+# Get gamma, confidence, and performance for everyone & sessions
+dat_sessions <- dat %>%
+  group_by(session, subject) %>%
+  nest() %>%
+  mutate(res = map(data, metrics)) %>%
+  unnest(res)
+
+# Create indicator for each of five exclusions rules for each subject. Variables are z-scored WITHOUT considering subjects with negative or NA gammas.
+dat_sessions <- dat_sessions %>%
+  mutate(
+    e1 = is.na(gamma),
+    e2 = gamma < 0,
+    # Negative gammas to NAs so they don't impact next calculations
+    gamma = ifelse(gamma < 0, NA, gamma),
+    e3 = abs(scale(gamma)) > exclude_threshold,
+    e4 = abs(scale(p)) > exclude_threshold,
+    e5 = abs(scale(con_m)) > exclude_threshold
+  ) %>%
+  group_by(subject, session) %>%
+  mutate(exclude = any(e1, e2, e3, e4, e5)) %>%
+  ungroup() %>%
+  filter(!exclude)
+```
+
+```{r math-performance-sessions-anova}
+fit_aov_math_sessions <- aov_ez(
+  id = "subject",
+  dv = "p",
+  data = dat_sessions,
+  within = "session",
+)
+list(tidy(fit_aov_math_sessions$anova_table),
+     tidy(fit_aov_math_sessions$aov)) %>% 
+  kable(digits = 3, caption = "ANOVA tables (corrected & not corrected)")
+paste("Subjects in ANOVA:", nrow(fit_aov_math_sessions$data$wide))
+summary(lmer(p ~ session + (session || subject),
+             data = dat_sessions))["coefficients"] %>%
+  kable(digits = 3, caption = "LMER Table")
+dat_sessions %>%
+  ggplot(aes(session, p)) +
+  geom_point(shape = 1, position = position_jitter(h = 0, w = .1)) +
+  stat_smooth(method = "lm") +
+  stat_summary(fun.data = mean_cl_boot)
+```
+
+# Resolution
+
+## Gamma by session
+
+We used the same rejection rules for gammas at the session level.
+
+```{r gamma-sessions}
+fit_aov_gamma_sessions <- aov_ez(
+  id = "subject",
+  dv = "gamma",
+  data = dat_sessions,
+  within = "session"
+)
+list(tidy(fit_aov_gamma_sessions$anova_table),
+     tidy(fit_aov_gamma_sessions$aov)) %>% 
+  kable(digits = 3, caption = "ANOVA tables (corrected & not corrected)")
+paste("Subjects in ANOVA:", nrow(fit_aov_gamma_sessions$data$wide))
+summary(lmer(gamma ~ session + (session || subject),
+  data = dat_sessions))["coefficients"] %>%
+  kable(digits = 3, caption = "Gamma LMER Table")
+dat_sessions %>%
+  ggplot(aes(session, gamma)) +
+  geom_point(shape = 1, position = position_jitter(h = 0, w = .1)) +
+  stat_smooth(method = "lm") +
+  stat_summary(fun.data = mean_cl_boot)
+```
+
+## Overall gamma
+
+```{r gamma-overall}
+dat_metrics %>%
+  summarise(
+    mean = mean(gamma, na.rm = T),
+    N = n(),
+    se = sd(gamma, na.rm = T) / sqrt(N)
+  ) %>%
+  kable(digits = 2)
+```
+
+```{r gamma-subject-ttest}
+t.test(dat_metrics$gamma)
+```
+
+## Type 2 SDT
+
+In calculating da, we added .5 to all cells. We calculate $d_a$ by obtaining intercept and slope of linear regression of z-scores in right panel above. We also obtained SDT metrics via ordinal regression to confirm.
+
+```{r da-ttest}
+t.test(dat_metrics$da)
+```
+
+```{r resolution-scatterplots, fig.cap = "Average and 95pCIs gammas and das. Points = subjects."}
+dat_metrics %>%
+  select(subject, gamma, da) %>%
+  gather(metric, value, gamma, da) %>%
+  ggplot(aes(x = metric, y = value)) +
+  scale_color_brewer(palette = "Set1") +
+  geom_hline(yintercept = 0, lty = 2, size = .33) +
+  geom_point(
+    shape = 21,
+    fill = "white",
+    alpha = .5,
+    size = .75,
+    position = position_jitter(h = 0, w = .075)
+  ) +
+  stat_summary(
+    fun.y = mean,
+    geom = "point",
+    size = 2.5
+  ) +
+  stat_summary(
+    fun.data = mean_cl_boot,
+    geom = "errorbar",
+    width = .33, size = .75
+  ) +
+  scale_y_continuous(breaks = pretty_breaks()) +
+  facet_wrap("metric", scales = "free") +
+  theme(
+    axis.title.x = element_blank(),
+    legend.position = "none"
+  )
+```
+
+# Resolution - performance Correlation
+
+```{r gamma-performance-plot}
+p_gamma_p <- dat_metrics %>%
+  ggplot(aes(p, gamma)) +
+  geom_vline(xintercept = .25, col = NA) + # Ensure limits
+  geom_vline(xintercept = 1, col = NA) + # Ensure limits
+  geom_hline(yintercept = 0, lty = 2, size = .33) +
+  geom_point(shape = 21, fill = "white", alpha = .75) +
+  geom_smooth(method = lm, col = "black", size = .75, alpha = .33) +
+  scale_x_continuous(breaks = c(.25, .5, .75, 1)) +
+  labs(
+    x = "Proportion correct",
+    y = "Gamma"
+  )
+p_gamma_p
+```
+
+We computed da using two different methods (as above and ordinal regression); displayed below:
+
+```{r da-performance-plot}
+dat_metrics %>% 
+  gather(method, value, da, da_ord) %>% 
+  ggplot(aes(p, value)) +
+  geom_hline(yintercept = 0, lty = 2, size = .33) +
+  geom_text(aes(label = subject)) +
+  geom_smooth(method = lm, col = "black", size = .75, alpha = .33) +
+  scale_x_continuous(breaks = c(.25, .5, .75, 1)) +
+  scale_y_continuous(limits = c(0, 2)) +
+  facet_wrap("method") +
+  labs(
+    x = "Proportion correct",
+    y = expression(italic(d)[a])
+  )
+
+dat_metrics %>%
+  ggplot(aes(da, da_ord)) +
+  geom_point() +
+  geom_abline() +
+  theme(aspect.ratio = 1) |
+  dat_metrics %>%
+    ggplot(aes(y0, d_ord)) +
+    geom_point() +
+    geom_abline() +
+    theme(aspect.ratio = 1)
+```
+
+Pearson correlation between gamma and performance
+
+```{r gamma-performance-test}
+cor.test(dat_metrics$gamma, dat_metrics$p, method = "pearson")
+```
+
+Between da and performance
+
+```{r da-performance-test}
+cor.test(dat_metrics$da, dat_metrics$p, method = "pearson")
+```
+
+# Calibration
+
+## Overconfidence
+
+Calculate bias scores. 
+
+```{r bias-calculate}
+dat_bias <- dat %>%
+  # Rescale confidence to 0-1 scale
+  mutate(con_01 = ifelse(exp != 5, con6 / 5, con / 10)) %>%
+  group_by(exp, subject) %>%
+  summarise(
+    p = mean(accuracy, na.rm = T),
+    con_01 = mean(con_01, na.rm = T)
+  ) %>%
+  mutate(bias = con_01 - p)
+```
+
+Summarise average bias scores and test against zero:
+
+```{r bias-summary-test}
+dat_bias %>%
+  group_by(exp) %>%
+  summarise(
+    mean = mean(bias, na.rm = T),
+    n = n(),
+    se = sd(bias, na.rm = T) / sqrt(n),
+    NAs = sum(is.na(bias))
+  ) %>%
+  kable(digits = 3)
+t.test(dat_bias$bias)
+```
+
+Univariate figure
+
+```{r bias-plot, eval = F}
+dat_bias %>%
+  ggplot(aes(x = "bias", y = bias)) +
+  scale_color_brewer(palette = "Set1") +
+  geom_hline(yintercept = 0, lty = 2, size = .2) +
+  geom_point(
+    shape = 1,
+    alpha = .5,
+    size = .66,
+    position = position_jitter(h = 0, w = .05)
+  ) +
+  stat_summary(
+    fun.y = mean,
+    geom = "point",
+    size = 2.5
+  ) +
+  stat_summary(
+    fun.data = mean_cl_boot,
+    geom = "errorbar",
+    width = .33, size = .75
+  ) +
+  labs(y = "Bias") +
+  theme(
+    axis.title.x = element_blank(),
+    legend.position = "none"
+  )
+```
+
+## Bias - performance correlation
+
+```{r bias-plot-performance}
+p_bias_p <- dat_bias %>%
+  ggplot(aes(p, bias)) +
+  geom_vline(xintercept = .25, col = NA) + # Ensure limits
+  geom_vline(xintercept = 1, col = NA) + # Ensure limits
+  geom_hline(yintercept = 0, lty = 2, size = .33) +
+  geom_point(shape = 21, alpha = .75, fill = "white") +
+  geom_smooth(method = lm, col = "black", size = .75, alpha = .33) +
+  scale_x_continuous(breaks = c(.25, .5, .75, 1)) +
+  labs(
+    x = "Proportion correct",
+    y = "Bias"
+  )
+p_bias_p
+```
+
+```{r bias-performance-correlate}
+# fit_bias <- lm(bias ~ scale(p), data = dat_bias)
+# summary(fit_bias)
+cor.test(dat_bias$bias, dat_bias$p)
+```
+
+
+# Publication figure
+
+```{r figure-pub, fig.height = 3.4, fig.width = 6.6, cache = F}
+(p_gamma_p + p_bias_p) *
+  theme(aspect.ratio = 1) +
+  plot_annotation(tag_levels = "A")
+```
+
