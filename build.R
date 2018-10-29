@@ -12,9 +12,10 @@ render_site(envir = new.env())
 # Produce analysis documents for all experiments (from _analyze.Rmd)
 for (i in 1:6) {
   render(
-    # envir = new.env(),
     input = "_analyze.Rmd", 
     params = list(experiment = i),
     output_file = paste0("docs/Experiment-", i, ".html")
-  )  
+  )
+  # Ensure all analyses start in clean environment
+  rm(list = ls())
 }
