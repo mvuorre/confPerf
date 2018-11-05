@@ -211,7 +211,8 @@ p_gamma_p <- dat_metrics %>%
   geom_hline(yintercept = 0, lty = 2, size = .33) +
   geom_point(shape = 21, fill = "white", alpha = .75) +
   geom_smooth(method = lm, col = "black", size = .75, alpha = .33) +
-  scale_x_continuous(breaks = c(.25, .5, .75, 1)) +
+    scale_x_continuous(breaks = c(.25, .5, .75, 1), 
+                     limits = c(.25, 1), expand = expand_scale(add = .01)) +
   labs(
     x = "Proportion correct",
     y = "Gamma"
@@ -270,7 +271,7 @@ Calculate bias scores.
 dat_bias <- dat %>%
   # Rescale confidence to 0-1 scale
   mutate(con_01 = ifelse(exp != 5, con6 / 5, con / 10)) %>%
-  group_by(exp, subject) %>%
+  group_by(subject) %>%
   summarise(
     p = mean(accuracy, na.rm = T),
     con_01 = mean(con_01, na.rm = T)
@@ -282,7 +283,6 @@ Summarise average bias scores and test against zero:
 
 ```{r bias-summary-test}
 dat_bias %>%
-  group_by(exp) %>%
   summarise(
     mean = mean(bias, na.rm = T),
     n = n(),
@@ -328,22 +328,19 @@ dat_bias %>%
 ```{r bias-plot-performance}
 p_bias_p <- dat_bias %>%
   ggplot(aes(p, bias)) +
-  geom_vline(xintercept = .25, col = NA) + # Ensure limits
-  geom_vline(xintercept = 1, col = NA) + # Ensure limits
   geom_hline(yintercept = 0, lty = 2, size = .33) +
   geom_point(shape = 21, alpha = .75, fill = "white") +
   geom_smooth(method = lm, col = "black", size = .75, alpha = .33) +
-  scale_x_continuous(breaks = c(.25, .5, .75, 1)) +
+  scale_x_continuous(breaks = c(.25, .5, .75, 1), 
+                     limits = c(.25, 1), expand = expand_scale(add = .01)) +
   labs(
     x = "Proportion correct",
-    y = "Bias"
+    y = "Mean confidence - proportion correct"
   )
 p_bias_p
 ```
 
 ```{r bias-performance-correlate}
-# fit_bias <- lm(bias ~ scale(p), data = dat_bias)
-# summary(fit_bias)
 cor.test(dat_bias$bias, dat_bias$p)
 ```
 
