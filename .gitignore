@@ -4,8 +4,6 @@
 .Ruserdata
 # Folders
 data-raw/
-trash/
-site_libs/
 # Output files
 docs/README.html
 docs/**/*.pdf
