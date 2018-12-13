@@ -1,7 +1,7 @@
 ---
 title: "Simulation"
 description: |
-  A simulation study investigating resolution metrics in various conditions
+  A simulation study investigating the impact of task knowledge and guessing on resolution metrics
 author:
   - name: Matti Vuorre 
     affiliation: Columbia University
@@ -57,22 +57,22 @@ dat_metrics <- dat %>%
   filter(p_know > 0)
 ```
 
-# Preface
+## Preface
 
-This simulation examines potential bias in measures of metacognitive resolution (gamma correlation and $d_a$) due to guessing.
+This simulation examines potential bias in measures of metacognitive resolution (gamma correlation and $d_a$) due to guessing and task knowledge.
 
 It was previously argued that gamma is unrelated to criterion test performance @Nelsoncomparisoncurrentmeasures1984:
 
 >Property 3. The feeling-of-knowing accuracy score should be independent of overall recognition performance.  
 Property 3 states that there should not be any built-in relation between feeling-of-knowing accuracy and overall recognition. The measure of feeling-of-knowing accuracy should allow for the possibility of a person with perfect feeling-of-knowing accuracy at each of many levels of overall recognition performance; for example, there could be completely accurate feeling-of-knowing predictions for a person with overall recognition performance of 90% correct, completely accurate feeling-of-knowing predictions for a person with overall recognition performance of 80% correct, and so on.
 
-However, in a mAFC tasks, gamma will be downward biased as a function of m (number of response alternatives) [@schwartz1994methodological]. Below, we show in detail how guesses cause this bias.
+However, in mAFC tasks, gamma is downward biased as a function of m (number of response alternatives) [@schwartz1994methodological]. Below, we show in detail how guesses cause this bias.
 
-## Example
+### Example
 
 Consider two people with perfect resolution answering 10 4-alternative MC questions. Person A knows 2 items, and B knows six items. However, due to guessing, A gets 4/10 right (2 correct guesses) and B gets 7/10 right (1 correct guess). But their resolution is perfect. Metrics of resolution therefore should indicate so.
 
-Here is example person A's table, observed gamma, and distribution
+Here is example person A's table, observed gamma, and distribution of gammas over 1000 replications.
 
 ```{r example-a}
 example <- function(know=2, guesses=2, levels=6, n=10) {
@@ -103,29 +103,18 @@ vcdExtra::GKgamma(table(b))$gamma
 summary(replicate(1000, vcdExtra::GKgamma(table(example(6, 1, 6, 10)))$gamma))
 ```
 
-```{r examples-more, eval = FALSE}
-# Binary confidence
-summary(replicate(100, vcdExtra::GKgamma(table(example(5, 1, 2, 10)))$gamma))
-c <- tibble(
-  accu = c(0,1,0,1,1,1),
-  conf = c(1,2,3,4,5,6)
-)
-table(c)
-vcdExtra::GKgamma(table(c))$gamma
-```
 
+## Simulation overview
 
-# Simulation overview
+This simulation produces hypothetical data sets of responses (accuracy & confidence rating pairs) under various conditions of guessing, performance, and true resolution. The simulation scheme is adapted from @benjamin2008measurement, and is outlined for one hypothetical subject as follows:
 
-This simulation produces hypothetical data sets of responses (accuracy & confidence rating pairs) under various conditions of guessing, performance, and underlying generative parameters defining primary task performance and metacognitive resolution. The simulation scheme is adapted from @benjamin2008measurement, and is outlined for one hypothetical subject as follows:
-
-- A list of items is generated based on number of items, and probability of known items
-- For each item, accuracy is determined such that known items are always correct, whereas unknown items are correct according to a defined guessing probability
+- A list of items is generated based on number of items, and proportion of known items (Knowledge = *K*)
+- For each item, accuracy is determined such that known items are always correct, whereas unknown items are correct according to a defined guessing probability *G*
 - For each item, a "metacognitive evidence" value is generated from one of two gaussian distributions depending on whether the item was known or unknown
   - Unknown item evidence values: mean zero and standard deviation one
-  - Known item evidence values: mean $\delta$ and standard deviation $\sigma_k$
+  - Known item evidence values: mean *R* and standard deviation $\sigma_k$. Thus, R defines the generative resolution parameter as the difference between the evidence distributions.
 - Evidence values are converted to confidence ratings (6-category scale) values via five thresholds
-- Resolution metrics are obtained based on this simulated data set of accuracy values (0/1) and confidence (1-6) ratings
+- Resolution metrics are obtained based on this simulated data set
 
 This simulation is then repeated over a set of hypothetical subjects to obtain mean estimated metrics for combinations of user-determined values. A summary of these variables appears in Table \@ref(tab:symbol-table).
 
@@ -133,7 +122,7 @@ This simulation is then repeated over a set of hypothetical subjects to obtain m
 tibble(
   Variable = c(
     "Number of trials/items", 
-    "Proportion of known items (performance)",
+    "Proportion of known items (knowledge)",
     "Guessing proportion (i.e. 1/m)",
     "Mean of evidence distribution for known items",
     "SD of evidence distribution for known items",
@@ -141,9 +130,9 @@ tibble(
   ),
   Symbol = c(
     "$N_{trials}$",
-    "$P_{know}$",
-    "$\\pi$",
-    "$\\delta$",
+    "$K$",
+    "$G$",
+    "$R$",
     "$\\sigma_k$",
     "$\\tau$"
   ),
@@ -156,9 +145,9 @@ tibble(
   )
 ```
 
-Metacognitive resolution, defined as $\delta$, is then estimated with a number of metrics:
+Metacognitive resolution, defined as *R*, is then estimated with a number of metrics:
 
-- Goodman-Kruskal *gamma* correlation
+- Goodman-Kruskal Gamma correlation
 - Signal-detection metrics $y_0$ (y-intercept of the type-2 zROC) and $d_a$ [@benjamin2008measurement]
 - Signal-detection metrics equivalent to above, but obtained from an ordinal regression [@BurknerOrdinalRegressionModels2018; @KnoblauchModelingPsychophysicalData2012], $d_{a-ord}$ and $d'_{ord}$
 - Pearson correlation $r$ 
@@ -169,7 +158,7 @@ $d_a = \frac{\sqrt{2}y_0}{\sqrt{1 + m^2}}$, where $m$ is the slope of the type-2
 
 The appendix of this page describes the R code used to implement this simulation. 
 
-## Example simulation run
+### Example simulation run
 
 ```{r simulation-function}
 sim_run <- function(p_know = NA, 
@@ -228,19 +217,14 @@ sim_run <- function(p_know = NA,
 
 Here is an example run of the simulation.
 
-```{r sim-test, fig.cap="Example run of simulation scheme with $\\delta = 1$: Histogram of simulated confidence ratings split by accuracy."}
-clm(
-  ordered(con6) ~ factor(accuracy),
-  link = "probit",
-  scale = ~accuracy,
-  control = list(maxIter = 100, convergence = "stop"),
-  data = dat)$coef %>% t %>%
-  kable(digits=2, caption = "Ordinal model parameters from aggregate data")
-tmp <- sim_run(out="data", 
-               d_gen = 1,
-               p_know = .65,
-               p_guess = 0.25,
-               n_trials = nrow(dat))
+```{r sim-test, fig.cap="Example run of simulation scheme with $R = 1$: Histogram of simulated confidence ratings split by accuracy."}
+tmp <- sim_run(
+  out = "data", 
+  d_gen = 1,
+  p_know = .65,
+  p_guess = 0.25,
+  n_trials = nrow(dat)
+)
 metrics(tmp, confidence = NULL, ordinal=TRUE) %>% 
   kable(digits=2, caption = "Estimated metrics from example simulation run")
 dat %>% 
@@ -257,11 +241,9 @@ dat %>%
 rm(tmp)
 ```
 
-# Simulation
+## Simulation
 
-The aim of this simulation was to examine the impact of guessing on measures of resolution at various levels of performance and generative resolution. 
-
-## Method
+### Method
 
 ```{r simsp-generative-parameters, fig.cap = "Generative SDT model for simulation."}
 Tau <-  c(-Inf, -1, -.5, 0, .5, 1, Inf)
@@ -285,13 +267,13 @@ p2 <- ggplot(data.frame(x=-3:6), aes(x)) +
   (p2 + labs(title = "Good metacognition (d = 2)"))
 ```
 
-We ran the simulation over a range of values of $P_{know}$ and $\delta$. The simulation was repeated 100 times at each combination of the generative parameters, with 20000 trials for each repeat.
+We ran the simulation over a range of values of *K* and *R*. The simulation was repeated 100 times at each combination of the generative parameters, with 20000 trials for each repeat.
 
 ```{r sims-parameters-summary}
 tibble(
   Variable = c(
     "Number of trials/items", 
-    "Proportion of known items (performance)",
+    "Proportion of known items (knowledge)",
     "Guessing proportion (i.e. 1/m)",
     "Mean of evidence distribution for known items",
     "SD of evidence distribution for known items",
@@ -299,9 +281,9 @@ tibble(
   ),
   Symbol = c(
     "$N_{trials}$",
-    "$P_{know}$",
-    "$\\pi$",
-    "$\\delta$",
+    "K",
+    "G",
+    "R",
     "$\\sigma_k$",
     "$\\tau$"
   ),
@@ -346,7 +328,7 @@ sims_long <- sims_mean %>%
   gather(parameter, estimate, gamma:da)
 ```
 
-## Results
+### Results
 
 These simulations show that gamma and da are unrelated to performance when guessing=0. However, with guesses, both metrics are confounded by guessing: da and gamma are increasingly downward biased as performance decreases. 
 
@@ -357,7 +339,7 @@ sims_long %>%
   ggplot(aes(p_know, estimate, col=d_gen, group=d_gen)) +
   scale_color_viridis_c("Resolution") +
   geom_line(size=.75) +
-  scale_x_continuous("Performance", breaks = pretty_breaks(5), limits = 0:1) +
+  scale_x_continuous("Knowledge", breaks = pretty_breaks(5), limits = 0:1) +
   scale_y_continuous("Mean estimate", breaks = pretty_breaks(5)) +
   facet_grid(Parameter~Guessing, scales="free_y", labeller=label_both) +
   theme(legend.position = "bottom")
@@ -381,7 +363,7 @@ sims %>%
   facet_grid(parameter~d_gen, scales = "free_y", labeller=label_both)
 ```
 
-## Bias
+### Bias
 
 We then assessed the amount of bias in the estimates (with guessing) at various levels of performance
 
@@ -403,7 +385,7 @@ sims_long_bias %>%
   facet_wrap(~parameter, scales = "free", nrow=1)
 ```
 
-# Compare data to simulations
+## Compare data to simulations
 
 We then compared the observed data values to the simulated values to examine to what extent the observed correlations resembled the necessary relations revealed by the simulation.
 
@@ -423,11 +405,11 @@ dat_metrics %>%
   geom_point(shape=1) +
   geom_abline(lty = 2) +
   coord_cartesian(ylim = 0:1, xlim = 0:1) +
-  labs(x="Observed (proportion correct)", y="Corrected (performance)") +
+  labs(x="Observed proportion correct", y="Corrected p(correct) ('knowledge')") +
   theme(aspect.ratio=1)
 ```
 
-## Regression test
+### Regression test
 
 We then tested whether the performance-resolution metric regression slopes were significantly steeper in the data, vs the equivalent slope in the simulations. We used second degree polynomial regressions. We tested
 
@@ -436,7 +418,7 @@ $$
 {s.e.\hat{\beta}_{1, data}}
 $$
 
-```{r regression-test, layout="l-page", fig.width=8, fig.height=4, fig.cap="Comparison of observed correlations to simulation results."}
+```{r regression-test, layout="l-page", fig.width=8, fig.height=3.6, fig.cap="Comparison of observed correlations to simulation results."}
 DEGREE <- 2
 # PLot
 tmp <- dat_metrics %>% 
@@ -448,13 +430,13 @@ tmp <- dat_metrics %>%
   filter(p_guess == 0.25)
 tmp %>% 
   ggplot(aes(p_know, estimate)) +
-  scale_x_continuous("Performance", breaks = pretty_breaks(5)) +
+  scale_x_continuous("Knowledge", breaks = pretty_breaks(5)) +
   scale_y_continuous("Estimate", breaks = pretty_breaks(5)) +
-  facet_grid(parameter~exp, scales="free") +
+  facet_grid(parameter~exp, scales="free_y") +
   theme(legend.position = "none") +
   geom_point(data = gather(dat_metrics, parameter, value, da, gamma), 
              aes(x = p_know, y = value), 
-             col = "black", shape=1, size = .25, alpha = .5) +
+             col = "black", fill = "white", shape = 21, size = .5, alpha = .8) +
   geom_smooth(data = gather(dat_metrics, parameter, value, da, gamma), 
               aes(x = p_know, y = value), lty=2, 
               formula = y ~ poly(x, DEGREE),
@@ -464,7 +446,7 @@ tmp %>%
   scale_color_viridis_c("Resolution", 
                         values = rescale(tmp$d_gen, 
                                          to = c(0, 1))) +
-  theme(panel.spacing = unit(10, "pt"))
+  theme(panel.spacing = unit(11, "pt"))
 
 tmp1 <- dat_metrics %>% 
   group_by(exp) %>% 
@@ -508,9 +490,84 @@ left_join(tmp1, tmp2) %>%
   )
 ```
 
-# Replication of Benjamin and Diaz
+### Debias average gammas
 
-We replicated the simulation of @benjamin2008measurement: For several levels of generative $\delta$, we ran 100 sim-subjects with 1000 trials each. For each subject, $P_{know}$ (known items) was drawn from $N(50, 10^2)$, rounded to an integer. Instead of 4 rating categories, we used 6 to more closely correspond to our data. $\pi$ (guessing) was varied at 0 and 0.25. $\sigma_k$ was either 1 or 1.5.
+Next, we approximated what the average gamma & da in each experiment would have been, if guesses were absent. We did this by taking the average gamma, da, and performance of each experiment, and finding their corresponding non-guessing values from the simulations.
+
+```{r}
+tmp <- dat_metrics %>% 
+  group_by(exp) %>% 
+  summarise(
+    p_know = mean(p, na.rm = T),
+    gamma = mean(gamma, na.rm = T), 
+    da = mean(da, na.rm = T)
+    ) %>% 
+  group_by(exp) %>% 
+  # Get the nearest performance used in simulations
+  mutate(p_know = p_know_bins[which.min(abs(p_know - p_know_bins))]) %>% 
+  ungroup() %>% 
+  gather(parameter, mean_data_estimate, gamma, da)
+tmp2 <- sims_long_bias %>% 
+  filter(between(p_know, .65, .76))
+# Take rows for each exp and parameter where distance between observed resolution value and estimated(guessing=0.25) is the smalles
+full_join(tmp, tmp2) %>% 
+  mutate(difference = abs(mean_data_estimate - p_guess0.25)) %>% 
+  arrange(parameter, exp, difference) %>%
+  distinct(parameter, exp, .keep_all = TRUE) %>% 
+  select(exp, p_know, parameter, mean_data_estimate, p_guess0.25, p_guess0) %>% 
+  mutate(percent_increase = (p_guess0-mean_data_estimate)/mean_data_estimate) %>% 
+  group_by(parameter) %>% 
+  mutate(mpc = mean(percent_increase)) %>% 
+  kable(
+    escape = FALSE, 
+    digits = 2,
+    caption = "Resolution metrics from data"
+  )
+```
+
+### Test subjects against simulated curve at perfect metacognition
+
+Here, we attempt to test observed gamma/da against perfect metacognition. Each participant's observed gamma/da is paired with the corresponding mean simulated estimate at maximum d_gen (corresponding to about gamma = .96) and guessing = 0.25 and the participant's level of performance.
+
+```{r}
+tmp1 <- dat_metrics %>% 
+  select(exp, subject, gamma, da, p_know) %>% 
+  group_by(exp, subject) %>% 
+  mutate(p_know_bin = p_know_bins[which.min(abs(p_know - p_know_bins))]) %>% 
+  ungroup()
+tmp2 <- sims_mean %>% 
+  filter(d_gen == max(delta_bins), p_guess == "0.25")
+tmp <- left_join(tmp1, tmp2, by = c("p_know_bin" = "p_know"))
+names(tmp) <- str_replace_all(names(tmp), "\\.x", ".data")
+names(tmp) <- str_replace_all(names(tmp), "\\.y", ".perfect")
+# Are subjects gamma/da significantly lower than the gamma/da from simulation with perfect metacognition? That is, we use the difference between each subject's gamma and the simulated perfect gamma at that subjects point of performance
+t.test(tmp$gamma.perfect, tmp$gamma.data, paired = T)
+t.test(tmp$da.perfect, tmp$da.data, paired = T)
+p1 <- tmp %>% 
+  mutate(
+    gamma_diff = gamma.perfect - gamma.data,
+    da_diff = da.perfect - da.data
+  ) %>% 
+  select(exp, subject, contains("_diff")) %>% 
+  gather(key, value, gamma_diff, da_diff) %>% 
+  ggplot(aes(value)) +
+  geom_histogram(bins = 50) +
+  facet_wrap("key", scales = "free")
+p2 <- tmp %>% 
+  ggplot(aes(gamma.perfect, gamma.data)) +
+  geom_abline(lty = 2) +
+  geom_point()
+p3 <- tmp %>% 
+  ggplot(aes(da.perfect, da.data)) +
+  geom_abline(lty = 2) +
+  geom_point()
+(p3 | p2) / p1
+```
+
+
+## Replication of Benjamin and Diaz
+
+We replicated the simulation of @benjamin2008measurement: For several levels of generative *R*, we ran 100 sim-subjects with 2000 trials each. For each subject, *K* was drawn from $N(50, 10^2)$, rounded to an integer. Instead of 4 rating categories, we used 6 to more closely correspond to our data. *G* was varied at 0 and 0.25. $\sigma_k$ was either 1 or 1.5.
 
 ```{r simsbd-run}
 sims_bd <- as_tibble(
@@ -547,16 +604,16 @@ sims_bd %>%
     ) +
   geom_line(size=1.25) +
   geom_abline(lty=2, size = .33) +
-  scale_x_continuous(expression(delta), breaks = pretty_breaks(5)) +
+  scale_x_continuous(Resolution, breaks = pretty_breaks(5)) +
   scale_y_continuous("Mean estimate", breaks = pretty_breaks(5)) +
   facet_wrap("s_gen", labeller=label_both) +
   theme(aspect.ratio = 1)
 ```
 
-The results of this simulation mirrored those of @benjamin2008measurement: Both gamma and $d_a$ are monotonically increasing with generative $\delta$, but only $d_a$ has the property of scaling linearly with $\delta$. Second, the SDT metrics are more accurately estimated via an ordinal regression [@KnoblauchModelingPsychophysicalData2012]. The $d'_{ord}$ metric recovers the generative parameter in every simulation, and its transformations ($d_{a-ord}$) are easily obtained and mirror those of the line-fitting procedure.
+The results of this simulation mirrored those of @benjamin2008measurement: Both gamma and $d_a$ are monotonically increasing with generative *R*, but only $d_a$ has the property of scaling linearly with it. Second, the SDT metrics are more accurately estimated via an ordinal regression [@KnoblauchModelingPsychophysicalData2012]. The $d'_{ord}$ metric recovers the generative parameter in every simulation, and its transformations ($d_{a-ord}$) are easily obtained and mirror those of the line-fitting procedure.
 
 
-## Introducing guessing
+### Introducing guessing
 
 However, when some correct answers are guesses (Figure \@ref(fig:simsbd-plot-guessing), below), all resolution metrics considered here are biased downward.
 
@@ -574,7 +631,7 @@ sims_bd %>%
     ) +
   geom_line(size=1.25) +
   geom_abline(lty=2, size = .33) +
-  scale_x_continuous(expression(delta), breaks = pretty_breaks(5)) +
+  scale_x_continuous(Resolution, breaks = pretty_breaks(5)) +
   scale_y_continuous("Mean estimate", breaks = pretty_breaks(5)) +
   facet_wrap("s_gen", labeller=label_both) +
   theme(aspect.ratio = 1)
@@ -596,12 +653,12 @@ sims_bd %>%
   theme(aspect.ratio=1)
 ```
 
-# Appendix A: Simulation function {.appendix}
+## Appendix A: Simulation function {.appendix}
 
 ```{r show-simulation-function, ref.label="simulation-function", echo=TRUE}
 ```
 
-# Appendix B: Calculating gamma from ROC {.appendix}
+## Appendix B: Calculating gamma from ROC {.appendix}
 
 ```{r, layout="l-body-outset"}
 # Gamma can be calculated from AUC (Higham & Higham, 2018)

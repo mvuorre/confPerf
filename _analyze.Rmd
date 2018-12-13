@@ -9,7 +9,7 @@ date: "`r Sys.Date()`"
 output: 
   radix::radix_article:
     toc: true
-    toc_depth: 1
+    toc_depth: 2
     self_contained: false
     lib_dir: "docs/site_libs"
 params:
@@ -19,6 +19,8 @@ params:
 ```{r setup, include=FALSE}
 source("functions.R")
 library(knitr)
+library(glue)
+library(ggbeeswarm)
 library(summarytools)
 library(tidyverse)
 library(broom)
@@ -38,7 +40,7 @@ opts_chunk$set(
 theme_set(theme_linedraw() + theme(panel.grid = element_blank()))
 ```
 
-# Data description
+## Data description
 
 ```{r create-data}
 dat <- read_csv("data/merged.csv", guess_max = 25000)
@@ -66,9 +68,9 @@ dat_metrics %>%
 ```
 
 
-# Math performance
+## Math performance
 
-ANOVA of proportion correct on session. We use same exclusion rules as above but at the session level. ANOVA only considers subjects who had observations at each session; thus we also fit a random intercept linear regression to include everyone.
+ANOVA of proportion correct on session. We use same exclusion rules as for the subject-level summaries, but at the session level. ANOVA only considers subjects who had observations at each session; thus we also fit a random intercept linear regression to include everyone.
 
 ```{r math-performance-sessions}
 exclude_threshold <- 3
@@ -104,48 +106,89 @@ fit_aov_math_sessions <- aov_ez(
   data = dat_sessions,
   within = "session",
 )
-list(tidy(fit_aov_math_sessions$anova_table),
-     tidy(fit_aov_math_sessions$aov)) %>% 
-  kable(digits = 3, caption = "ANOVA tables (corrected & not corrected)")
-paste("Subjects in ANOVA:", nrow(fit_aov_math_sessions$data$wide))
-summary(lmer(p ~ session + (session || subject),
-             data = dat_sessions))["coefficients"] %>%
-  kable(digits = 3, caption = "LMER Table")
-dat_sessions %>%
-  ggplot(aes(session, p)) +
-  geom_point(shape = 1, position = position_jitter(h = 0, w = .1)) +
-  stat_smooth(method = "lm") +
-  stat_summary(fun.data = mean_cl_boot)
+aov_n <- nrow(fit_aov_math_sessions$data$wide)
+tidy(fit_aov_math_sessions$anova_table) %>% 
+  kable(
+    digits = 3, 
+    caption = glue("G-G corrected ANOVA table; N = {aov_n})")
+  )
 ```
 
-# Resolution
+```{r math-performance-sessions-anova2}
+tidy(fit_aov_math_sessions$aov) %>%
+  kable(
+    digits = 3, 
+    caption = glue("Uncorrected ANOVA table)")
+  )
+```
 
-## Gamma by session
+```{r math-performance-sessions-lme}
+summary(lmer(p ~ session + (session || subject),
+             data = dat_sessions))["coefficients"] %>%
+  kable(digits = 3, caption = "lmer parameter summary")
+```
+
+```{r math-performance-sessions-fig, fig.cap = "Proportion correct across sessions."}
+dat_sessions %>%
+  ggplot(aes(session, p)) +
+  # geom_point(shape = 1, position = position_jitter(h = 0, w = .1)) +
+  geom_beeswarm(shape = 21) +
+  stat_smooth(method = "lm") +
+  stat_summary(fun.data = mean_cl_boot) +
+  labs(
+    x = "Session / test",
+    y = "Proportion correct"
+  )
+```
+
+## Resolution
+
+### Gamma by session
 
 We used the same rejection rules for gammas at the session level.
 
-```{r gamma-sessions}
+```{r gamma-sessions-anova}
 fit_aov_gamma_sessions <- aov_ez(
   id = "subject",
   dv = "gamma",
   data = dat_sessions,
   within = "session"
 )
-list(tidy(fit_aov_gamma_sessions$anova_table),
-     tidy(fit_aov_gamma_sessions$aov)) %>% 
-  kable(digits = 3, caption = "ANOVA tables (corrected & not corrected)")
-paste("Subjects in ANOVA:", nrow(fit_aov_gamma_sessions$data$wide))
-summary(lmer(gamma ~ session + (session || subject),
-  data = dat_sessions))["coefficients"] %>%
-  kable(digits = 3, caption = "Gamma LMER Table")
-dat_sessions %>%
-  ggplot(aes(session, gamma)) +
-  geom_point(shape = 1, position = position_jitter(h = 0, w = .1)) +
-  stat_smooth(method = "lm") +
-  stat_summary(fun.data = mean_cl_boot)
+aov_n <- nrow(fit_aov_gamma_sessions$data$wide)
+tidy(fit_aov_gamma_sessions$anova_table) %>% 
+  kable(
+    digits = 3, 
+    caption = glue("G-G corrected gamma ANOVA table; N = {aov_n})")
+  )
 ```
 
-## Overall gamma
+```{r gamma-sessions-anova2}
+tidy(fit_aov_gamma_sessions$aov) %>%
+  kable(
+    digits = 3, 
+    caption = glue("Uncorrected gamma ANOVA table)")
+  )
+```
+
+```{r gamma-sessions-lme}
+summary(lmer(gamma ~ session + (session || subject),
+  data = dat_sessions))["coefficients"] %>%
+  kable(digits = 3, caption = "Gamma lmer parameter summary")
+```
+
+```{r gamma-sessions-fig, fig.cap = "Gamma correlation across sessions."}
+dat_sessions %>%
+  ggplot(aes(session, gamma)) +
+  geom_beeswarm(shape = 21) +
+  stat_smooth(method = "lm") +
+  stat_summary(fun.data = mean_cl_boot) +
+  labs(
+    x = "Session / test",
+    y = "Gamma correlation"
+  )
+```
+
+### Overall gamma
 
 ```{r gamma-overall}
 dat_metrics %>%
@@ -154,16 +197,19 @@ dat_metrics %>%
     N = n(),
     se = sd(gamma, na.rm = T) / sqrt(N)
   ) %>%
-  kable(digits = 2)
+  kable(
+    digits = 2,
+    caption = "Summary of gamma correlations"
+    )
 ```
 
 ```{r gamma-subject-ttest}
 t.test(dat_metrics$gamma)
 ```
 
-## Type 2 SDT
+### Signal detection analysis
 
-In calculating da, we added .5 to all cells. We calculate $d_a$ by obtaining intercept and slope of linear regression of z-scores in right panel above. We also obtained SDT metrics via ordinal regression to confirm.
+In calculating $d_a$, we added .5 to all cells. We calculate $d_a$ by obtaining intercept and slope of linear regression of z-scores in right panel above. We also obtained SDT metrics via ordinal regression to confirm.
 
 ```{r da-ttest}
 t.test(dat_metrics$da)
@@ -176,12 +222,10 @@ dat_metrics %>%
   ggplot(aes(x = metric, y = value)) +
   scale_color_brewer(palette = "Set1") +
   geom_hline(yintercept = 0, lty = 2, size = .33) +
-  geom_point(
+  geom_beeswarm(
     shape = 21,
-    fill = "white",
-    alpha = .5,
-    size = .75,
-    position = position_jitter(h = 0, w = .075)
+    cex = 2,
+    fill = "white"
   ) +
   stat_summary(
     fun.y = mean,
@@ -191,7 +235,7 @@ dat_metrics %>%
   stat_summary(
     fun.data = mean_cl_boot,
     geom = "errorbar",
-    width = .33, size = .75
+    width = .1, size = .75
   ) +
   scale_y_continuous(breaks = pretty_breaks()) +
   facet_wrap("metric", scales = "free") +
@@ -201,9 +245,9 @@ dat_metrics %>%
   )
 ```
 
-# Resolution - performance Correlation
+## Resolution - performance correlation
 
-```{r gamma-performance-plot}
+```{r gamma-performance-plot, fig.cap = "Correlation between math performance and resolution."}
 p_gamma_p <- dat_metrics %>%
   ggplot(aes(p, gamma)) +
   geom_vline(xintercept = .25, col = NA) + # Ensure limits
@@ -220,52 +264,21 @@ p_gamma_p <- dat_metrics %>%
 p_gamma_p
 ```
 
-We computed da using two different methods (as above and ordinal regression); displayed below:
-
-```{r da-performance-plot}
-dat_metrics %>% 
-  gather(method, value, da, da_ord) %>% 
-  ggplot(aes(p, value)) +
-  geom_hline(yintercept = 0, lty = 2, size = .33) +
-  geom_text(aes(label = subject)) +
-  geom_smooth(method = lm, col = "black", size = .75, alpha = .33) +
-  scale_x_continuous(breaks = c(.25, .5, .75, 1)) +
-  scale_y_continuous(limits = c(0, 2)) +
-  facet_wrap("method") +
-  labs(
-    x = "Proportion correct",
-    y = expression(italic(d)[a])
-  )
-
-dat_metrics %>%
-  ggplot(aes(da, da_ord)) +
-  geom_point() +
-  geom_abline() +
-  theme(aspect.ratio = 1) |
-  dat_metrics %>%
-    ggplot(aes(y0, d_ord)) +
-    geom_point() +
-    geom_abline() +
-    theme(aspect.ratio = 1)
-```
-
 Pearson correlation between gamma and performance
 
 ```{r gamma-performance-test}
 cor.test(dat_metrics$gamma, dat_metrics$p, method = "pearson")
 ```
 
-Between da and performance
+Between $d_a$ and performance
 
 ```{r da-performance-test}
 cor.test(dat_metrics$da, dat_metrics$p, method = "pearson")
 ```
 
-# Calibration
+## Calibration
 
-## Overconfidence
-
-Calculate bias scores. 
+### Overconfidence
 
 ```{r bias-calculate}
 dat_bias <- dat %>%
@@ -279,8 +292,6 @@ dat_bias <- dat %>%
   mutate(bias = con_01 - p)
 ```
 
-Summarise average bias scores and test against zero:
-
 ```{r bias-summary-test}
 dat_bias %>%
   summarise(
@@ -289,11 +300,12 @@ dat_bias %>%
     se = sd(bias, na.rm = T) / sqrt(n),
     NAs = sum(is.na(bias))
   ) %>%
-  kable(digits = 3)
+  kable(
+    digits = 3,
+    caption = "Summary of bias scores"
+    )
 t.test(dat_bias$bias)
 ```
-
-Univariate figure
 
 ```{r bias-plot, eval = F}
 dat_bias %>%
@@ -323,9 +335,9 @@ dat_bias %>%
   )
 ```
 
-## Bias - performance correlation
+### Bias - performance correlation
 
-```{r bias-plot-performance}
+```{r bias-plot-performance, fig.cap = "Correlation between math performance and calibration bias."}
 p_bias_p <- dat_bias %>%
   ggplot(aes(p, bias)) +
   geom_hline(yintercept = 0, lty = 2, size = .33) +
@@ -345,9 +357,9 @@ cor.test(dat_bias$bias, dat_bias$p)
 ```
 
 
-# Publication figure
+## Publication figure
 
-```{r figure-pub, fig.height = 3.4, fig.width = 6.6, cache = F}
+```{r figure-pub, fig.height = 3.4, fig.width = 6.6, fig.cap = "Figure for manuscript."}
 (p_gamma_p + p_bias_p) *
   theme(aspect.ratio = 1) +
   plot_annotation(tag_levels = "A")

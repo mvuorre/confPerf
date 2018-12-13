@@ -58,7 +58,7 @@ Because of these differences in scales, we have binned confidence ratings to six
 
 ```{r, eval = T}
 dat <- read_csv("data/merged.csv", guess_max = 25000)
-dat
+head(dat) %>% kable()
 ```
 
 `exclude` is a logical indicating whether the participant on that row met the exclusion criteria. `subject` labels are arbitrary numbers.

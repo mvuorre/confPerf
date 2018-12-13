@@ -21,25 +21,25 @@
   <!--radix_placeholder_meta_tags-->
   <title>Confidence in Mathematics: Simulation</title>
   
-  <meta property="description" itemprop="description" content="A simulation study investigating resolution metrics in various conditions"/>
+  <meta property="description" itemprop="description" content="A simulation study investigating the impact of task knowledge and guessing on resolution metrics"/>
   
   
   <!--  https://schema.org/Article -->
-  <meta property="article:published" itemprop="datePublished" content="2018-10-26"/>
-  <meta property="article:created" itemprop="dateCreated" content="2018-10-26"/>
+  <meta property="article:published" itemprop="datePublished" content="2018-12-13"/>
+  <meta property="article:created" itemprop="dateCreated" content="2018-12-13"/>
   <meta name="article:author" content="Matti Vuorre"/>
   
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
   <meta property="og:title" content="Confidence in Mathematics: Simulation"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:description" content="A simulation study investigating resolution metrics in various conditions"/>
+  <meta property="og:description" content="A simulation study investigating the impact of task knowledge and guessing on resolution metrics"/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:site_name" content="Confidence in Mathematics"/>
   
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
   <meta property="twitter:title" content="Confidence in Mathematics: Simulation"/>
-  <meta property="twitter:description" content="A simulation study investigating resolution metrics in various conditions"/>
+  <meta property="twitter:description" content="A simulation study investigating the impact of task knowledge and guessing on resolution metrics"/>
   
   <!--/radix_placeholder_meta_tags-->
   
@@ -50,7 +50,7 @@
   <!--radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","author","date","output","bibliography"]}},"value":[{"type":"character","attributes":{},"value":["Simulation"]},{"type":"character","attributes":{},"value":["A simulation study investigating resolution metrics in various conditions\n"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","affiliation"]}},"value":[{"type":"character","attributes":{},"value":["Matti Vuorre"]},{"type":"character","attributes":{},"value":["Columbia University"]}]}]},{"type":"character","attributes":{},"value":["2018-10-26"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["radix::radix_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["toc","toc_depth","self_contained","lib_dir"]}},"value":[{"type":"logical","attributes":{},"value":[true]},{"type":"integer","attributes":{},"value":[2]},{"type":"logical","attributes":{},"value":[false]},{"type":"character","attributes":{},"value":["site_libs"]}]}]},{"type":"character","attributes":{},"value":["bibliography.bib"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","author","date","output","bibliography"]}},"value":[{"type":"character","attributes":{},"value":["Simulation"]},{"type":"character","attributes":{},"value":["A simulation study investigating the impact of task knowledge and guessing on resolution metrics\n"]},{"type":"list","attributes":{},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["name","affiliation"]}},"value":[{"type":"character","attributes":{},"value":["Matti Vuorre"]},{"type":"character","attributes":{},"value":["Columbia University"]}]}]},{"type":"character","attributes":{},"value":["2018-12-13"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["radix::radix_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["toc","toc_depth","self_contained","lib_dir"]}},"value":[{"type":"logical","attributes":{},"value":[true]},{"type":"integer","attributes":{},"value":[2]},{"type":"logical","attributes":{},"value":[false]},{"type":"character","attributes":{},"value":["site_libs"]}]}]},{"type":"character","attributes":{},"value":["bibliography.bib"]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -388,9 +388,8 @@
   
   </style>
   
-  <link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet"/>
-  <script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
-  <script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+  <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
   <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
   <!--/radix_placeholder_navigation_in_header-->
   <!--radix_placeholder_distill-->
@@ -536,6 +535,10 @@
   /* Tweak code blocks (note that this CSS is repeated above in an injection
      into the d-code shadow dom) */
   
+  d-code {
+    overflow-x: auto !important;
+  }
+  
   pre.d-code code.d-code {
     padding-left: 10px;
     font-size: 12px;
@@ -566,6 +569,11 @@
   }
   
   @media(min-width: 768px) {
+  
+  d-code {
+    overflow-x: visible !important;
+  }
+  
   pre.d-code code.d-code  {
       padding-left: 18px;
       font-size: 14px;
@@ -1273,7 +1281,7 @@
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Simulation","description":"A simulation study investigating resolution metrics in various conditions","authors":[{"author":"Matti Vuorre","authorURL":"#","affiliation":"Columbia University","affiliationURL":"#"}],"publishedDate":"2018-10-26T00:00:00.000-04:00","citationText":"Vuorre, 2018"}
+{"title":"Simulation","description":"A simulation study investigating the impact of task knowledge and guessing on resolution metrics","authors":[{"author":"Matti Vuorre","authorURL":"#","affiliation":"Columbia University","affiliationURL":"#"}],"publishedDate":"2018-12-13T00:00:00.000-05:00","citationText":"Vuorre, 2018"}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -1315,36 +1323,24 @@ Experiments
 
 <div class="d-title">
 <h1>Simulation</h1>
-<p>A simulation study investigating resolution metrics in various conditions</p>
+<p>A simulation study investigating the impact of task knowledge and guessing on resolution metrics</p>
 </div>
 
 <div class="d-byline">
   Matti Vuorre  (Columbia University)
   
-<br/>2018-10-26
+<br/>2018-12-13
 </div>
 
 <div class="d-article">
 <h3 class="d-toc-header">Table of Contents</h3>
 <nav class="d-toc" id="TOC">
 <ul>
-<li><a href="#preface">Preface</a><ul>
-<li><a href="#example">Example</a></li>
-</ul></li>
-<li><a href="#simulation-overview">Simulation overview</a><ul>
-<li><a href="#example-simulation-run">Example simulation run</a></li>
-</ul></li>
-<li><a href="#simulation">Simulation</a><ul>
-<li><a href="#method">Method</a></li>
-<li><a href="#results">Results</a></li>
-<li><a href="#bias">Bias</a></li>
-</ul></li>
-<li><a href="#compare-data-to-simulations">Compare data to simulations</a><ul>
-<li><a href="#regression-test">Regression test</a></li>
-</ul></li>
-<li><a href="#replication-of-benjamin-and-diaz">Replication of Benjamin and Diaz</a><ul>
-<li><a href="#introducing-guessing">Introducing guessing</a></li>
-</ul></li>
+<li><a href="#preface">Preface</a></li>
+<li><a href="#simulation-overview">Simulation overview</a></li>
+<li><a href="#simulation">Simulation</a></li>
+<li><a href="#compare-data-to-simulations">Compare data to simulations</a></li>
+<li><a href="#replication-of-benjamin-and-diaz">Replication of Benjamin and Diaz</a></li>
 <li><a href="#appendix-a-simulation-function">Appendix A: Simulation function</a></li>
 <li><a href="#appendix-b-calculating-gamma-from-roc">Appendix B: Calculating gamma from ROC</a></li>
 </ul>
@@ -1353,17 +1349,17 @@ Experiments
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<h1 id="preface">Preface</h1>
-<p>This simulation examines potential bias in measures of metacognitive resolution (gamma correlation and <span class="math inline">\(d_a\)</span>) due to guessing.</p>
+<h2 id="preface">Preface</h2>
+<p>This simulation examines potential bias in measures of metacognitive resolution (gamma correlation and <span class="math inline">\(d_a\)</span>) due to guessing and task knowledge.</p>
 <p>It was previously argued that gamma is unrelated to criterion test performance <span class="citation" data-cites="Nelsoncomparisoncurrentmeasures1984">Nelson (<a href="#ref-Nelsoncomparisoncurrentmeasures1984">1984</a>)</span>:</p>
 <blockquote>
 <p>Property 3. The feeling-of-knowing accuracy score should be independent of overall recognition performance.<br />
 Property 3 states that there should not be any built-in relation between feeling-of-knowing accuracy and overall recognition. The measure of feeling-of-knowing accuracy should allow for the possibility of a person with perfect feeling-of-knowing accuracy at each of many levels of overall recognition performance; for example, there could be completely accurate feeling-of-knowing predictions for a person with overall recognition performance of 90% correct, completely accurate feeling-of-knowing predictions for a person with overall recognition performance of 80% correct, and so on.</p>
 </blockquote>
-<p>However, in a mAFC tasks, gamma will be downward biased as a function of m (number of response alternatives) <span class="citation" data-cites="schwartz1994methodological">(Schwartz and Metcalfe <a href="#ref-schwartz1994methodological">1994</a>)</span>. Below, we show in detail how guesses cause this bias.</p>
-<h2 id="example">Example</h2>
+<p>However, in mAFC tasks, gamma is downward biased as a function of m (number of response alternatives) <span class="citation" data-cites="schwartz1994methodological">(Schwartz and Metcalfe <a href="#ref-schwartz1994methodological">1994</a>)</span>. Below, we show in detail how guesses cause this bias.</p>
+<h3 id="example">Example</h3>
 <p>Consider two people with perfect resolution answering 10 4-alternative MC questions. Person A knows 2 items, and B knows six items. However, due to guessing, A gets 4/10 right (2 correct guesses) and B gets 7/10 right (1 correct guess). But their resolution is perfect. Metrics of resolution therefore should indicate so.</p>
-<p>Here is example person A’s table, observed gamma, and distribution</p>
+<p>Here is example person A’s table, observed gamma, and distribution of gammas over 1000 replications.</p>
 <div class="layout-chunk" data-layout="l-body">
 <pre><code>
         Confidence
@@ -1389,21 +1385,18 @@ Accuracy 1 2 3 4 5 6
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
  0.7143  0.8000  0.9000  0.9049  1.0000  1.0000 </code></pre>
 </div>
-<div class="layout-chunk" data-layout="l-body">
-
-</div>
-<h1 id="simulation-overview">Simulation overview</h1>
-<p>This simulation produces hypothetical data sets of responses (accuracy &amp; confidence rating pairs) under various conditions of guessing, performance, and underlying generative parameters defining primary task performance and metacognitive resolution. The simulation scheme is adapted from <span class="citation" data-cites="benjamin2008measurement">Benjamin and Diaz (<a href="#ref-benjamin2008measurement">2008</a>)</span>, and is outlined for one hypothetical subject as follows:</p>
+<h2 id="simulation-overview">Simulation overview</h2>
+<p>This simulation produces hypothetical data sets of responses (accuracy &amp; confidence rating pairs) under various conditions of guessing, performance, and true resolution. The simulation scheme is adapted from <span class="citation" data-cites="benjamin2008measurement">Benjamin and Diaz (<a href="#ref-benjamin2008measurement">2008</a>)</span>, and is outlined for one hypothetical subject as follows:</p>
 <ul>
-<li>A list of items is generated based on number of items, and probability of known items</li>
-<li>For each item, accuracy is determined such that known items are always correct, whereas unknown items are correct according to a defined guessing probability</li>
+<li>A list of items is generated based on number of items, and proportion of known items (Knowledge = <em>K</em>)</li>
+<li>For each item, accuracy is determined such that known items are always correct, whereas unknown items are correct according to a defined guessing probability <em>G</em></li>
 <li>For each item, a “metacognitive evidence” value is generated from one of two gaussian distributions depending on whether the item was known or unknown
 <ul>
 <li>Unknown item evidence values: mean zero and standard deviation one</li>
-<li>Known item evidence values: mean <span class="math inline">\(\delta\)</span> and standard deviation <span class="math inline">\(\sigma_k\)</span></li>
+<li>Known item evidence values: mean <em>R</em> and standard deviation <span class="math inline">\(\sigma_k\)</span>. Thus, R defines the generative resolution parameter as the difference between the evidence distributions.</li>
 </ul></li>
 <li>Evidence values are converted to confidence ratings (6-category scale) values via five thresholds</li>
-<li>Resolution metrics are obtained based on this simulated data set of accuracy values (0/1) and confidence (1-6) ratings</li>
+<li>Resolution metrics are obtained based on this simulated data set</li>
 </ul>
 <p>This simulation is then repeated over a set of hypothetical subjects to obtain mean estimated metrics for combinations of user-determined values. A summary of these variables appears in Table <a href="#tab:symbol-table">1</a>.</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -1423,18 +1416,18 @@ Accuracy 1 2 3 4 5 6
 <td style="text-align: left;">100</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Proportion of known items (performance)</td>
-<td style="text-align: left;"><span class="math inline">\(P_{know}\)</span></td>
+<td style="text-align: left;">Proportion of known items (knowledge)</td>
+<td style="text-align: left;"><span class="math inline">\(K\)</span></td>
 <td style="text-align: left;">0.5</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Guessing proportion (i.e. 1/m)</td>
-<td style="text-align: left;"><span class="math inline">\(\pi\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(G\)</span></td>
 <td style="text-align: left;">0</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Mean of evidence distribution for known items</td>
-<td style="text-align: left;"><span class="math inline">\(\delta\)</span></td>
+<td style="text-align: left;"><span class="math inline">\(R\)</span></td>
 <td style="text-align: left;">1</td>
 </tr>
 <tr class="odd">
@@ -1450,9 +1443,9 @@ Accuracy 1 2 3 4 5 6
 </tbody>
 </table>
 </div>
-<p>Metacognitive resolution, defined as <span class="math inline">\(\delta\)</span>, is then estimated with a number of metrics:</p>
+<p>Metacognitive resolution, defined as <em>R</em>, is then estimated with a number of metrics:</p>
 <ul>
-<li>Goodman-Kruskal <em>gamma</em> correlation</li>
+<li>Goodman-Kruskal Gamma correlation</li>
 <li>Signal-detection metrics <span class="math inline">\(y_0\)</span> (y-intercept of the type-2 zROC) and <span class="math inline">\(d_a\)</span> <span class="citation" data-cites="benjamin2008measurement">(Benjamin and Diaz <a href="#ref-benjamin2008measurement">2008</a>)</span></li>
 <li>Signal-detection metrics equivalent to above, but obtained from an ordinal regression <span class="citation" data-cites="BurknerOrdinalRegressionModels2018 KnoblauchModelingPsychophysicalData2012">(Bürkner and Vuorre <a href="#ref-BurknerOrdinalRegressionModels2018">2018</a>; Knoblauch and Maloney <a href="#ref-KnoblauchModelingPsychophysicalData2012">2012</a>)</span>, <span class="math inline">\(d_{a-ord}\)</span> and <span class="math inline">\(d&#39;_{ord}\)</span></li>
 <li>Pearson correlation <span class="math inline">\(r\)</span></li>
@@ -1461,37 +1454,12 @@ Accuracy 1 2 3 4 5 6
 <span class="math inline">\(d_a = \frac{\sqrt{2}y_0}{\sqrt{1 + m^2}}\)</span>, where <span class="math inline">\(m\)</span> is the slope of the type-2 zROC (= ratio of the unknown and known item evidence distribution standard deviations).
 </aside>
 <p>The appendix of this page describes the R code used to implement this simulation.</p>
-<h2 id="example-simulation-run">Example simulation run</h2>
+<h3 id="example-simulation-run">Example simulation run</h3>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
 <p>Here is an example run of the simulation.</p>
 <div class="layout-chunk" data-layout="l-body">
-<table>
-<caption><span id="tab:sim-test">Table 2: </span>Ordinal model parameters from aggregate data</caption>
-<thead>
-<tr class="header">
-<th style="text-align: right;">0|1</th>
-<th style="text-align: right;">1|2</th>
-<th style="text-align: right;">2|3</th>
-<th style="text-align: right;">3|4</th>
-<th style="text-align: right;">4|5</th>
-<th style="text-align: right;">factor(accuracy)1</th>
-<th style="text-align: right;">accuracy</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">-0.81</td>
-<td style="text-align: right;">-0.46</td>
-<td style="text-align: right;">-0.13</td>
-<td style="text-align: right;">0.29</td>
-<td style="text-align: right;">0.91</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">-0.02</td>
-</tr>
-</tbody>
-</table>
 <table>
 <caption><span id="tab:sim-test">Table 2: </span>Estimated metrics from example simulation run</caption>
 <thead>
@@ -1526,15 +1494,14 @@ Accuracy 1 2 3 4 5 6
 </tbody>
 </table>
 <div class="figure"><span id="fig:sim-test"></span>
-<img src="simulation_files/figure-html5/sim-test-1.png" alt="Example run of simulation scheme with $\delta = 1$: Histogram of simulated confidence ratings split by accuracy." width="624" />
+<img src="simulation_files/figure-html5/sim-test-1.png" alt="Example run of simulation scheme with $R = 1$: Histogram of simulated confidence ratings split by accuracy." width="624" />
 <p class="caption">
-Figure 1: Example run of simulation scheme with <span class="math inline">\(\delta = 1\)</span>: Histogram of simulated confidence ratings split by accuracy.
+Figure 1: Example run of simulation scheme with <span class="math inline">\(R = 1\)</span>: Histogram of simulated confidence ratings split by accuracy.
 </p>
 </div>
 </div>
-<h1 id="simulation">Simulation</h1>
-<p>The aim of this simulation was to examine the impact of guessing on measures of resolution at various levels of performance and generative resolution.</p>
-<h2 id="method">Method</h2>
+<h2 id="simulation">Simulation</h2>
+<h3 id="method">Method</h3>
 <div class="layout-chunk" data-layout="l-body">
 <table>
 <caption><span id="tab:simsp-generative-parameters">Table 3: </span>One set of generated data with d = 1</caption>
@@ -1577,7 +1544,7 @@ Figure 2: Generative SDT model for simulation.
 </p>
 </div>
 </div>
-<p>We ran the simulation over a range of values of <span class="math inline">\(P_{know}\)</span> and <span class="math inline">\(\delta\)</span>. The simulation was repeated 100 times at each combination of the generative parameters, with 20000 trials for each repeat.</p>
+<p>We ran the simulation over a range of values of <em>K</em> and <em>R</em>. The simulation was repeated 100 times at each combination of the generative parameters, with 20000 trials for each repeat.</p>
 <div class="layout-chunk" data-layout="l-body">
 <table>
 <caption><span id="tab:sims-parameters-summary">Table 4: </span>Variable values used in main simulation run.</caption>
@@ -1595,18 +1562,18 @@ Figure 2: Generative SDT model for simulation.
 <td style="text-align: left;">20000</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Proportion of known items (performance)</td>
-<td style="text-align: left;"><span class="math inline">\(P_{know}\)</span></td>
+<td style="text-align: left;">Proportion of known items (knowledge)</td>
+<td style="text-align: left;">K</td>
 <td style="text-align: left;">0.05 - 0.95</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Guessing proportion (i.e. 1/m)</td>
-<td style="text-align: left;"><span class="math inline">\(\pi\)</span></td>
+<td style="text-align: left;">G</td>
 <td style="text-align: left;">0 / 0.25</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Mean of evidence distribution for known items</td>
-<td style="text-align: left;"><span class="math inline">\(\delta\)</span></td>
+<td style="text-align: left;">R</td>
 <td style="text-align: left;">0.05 - 2.45</td>
 </tr>
 <tr class="odd">
@@ -1625,7 +1592,7 @@ Figure 2: Generative SDT model for simulation.
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<h2 id="results">Results</h2>
+<h3 id="results">Results</h3>
 <p>These simulations show that gamma and da are unrelated to performance when guessing=0. However, with guesses, both metrics are confounded by guessing: da and gamma are increasingly downward biased as performance decreases.</p>
 <div class="layout-chunk" data-layout="l-body-outset">
 <p><img src="simulation_files/figure-html5/main-figure-1.png" width="672" /></p>
@@ -1634,12 +1601,12 @@ Figure 2: Generative SDT model for simulation.
 <div class="layout-chunk" data-layout="l-body-outset">
 <p><img src="simulation_files/figure-html5/simsp-plot-1.png" width="768" /></p>
 </div>
-<h2 id="bias">Bias</h2>
+<h3 id="bias">Bias</h3>
 <p>We then assessed the amount of bias in the estimates (with guessing) at various levels of performance</p>
 <div class="layout-chunk" data-layout="l-body-outset">
 <p><img src="simulation_files/figure-html5/sims-bias-illustrate-1.png" width="768" /></p>
 </div>
-<h1 id="compare-data-to-simulations">Compare data to simulations</h1>
+<h2 id="compare-data-to-simulations">Compare data to simulations</h2>
 <p>We then compared the observed data values to the simulated values to examine to what extent the observed correlations resembled the necessary relations revealed by the simulation.</p>
 <p>However, the simulated data were generated by varying underlying performance (proportion <em>known</em> items), and guesses were then added to produce the observed accuracy values. Accuracy values in the data, likewise, are contaminated by guesses. One way to correct for this is to use a formula to try to convert the observed proportion correct to underlying performance. Thus, we can “correct” the guess-contaminated observed proportions correct to performance values using e.g. Abbott’s formula.</p>
 <aside>
@@ -1655,7 +1622,7 @@ Figure 3: Comparison of observed and corrected proportion corrected.
 </p>
 </div>
 </div>
-<h2 id="regression-test">Regression test</h2>
+<h3 id="regression-test">Regression test</h3>
 <p>We then tested whether the performance-resolution metric regression slopes were significantly steeper in the data, vs the equivalent slope in the simulations. We used second degree polynomial regressions. We tested</p>
 <p><span class="math display">\[
 \frac{ \hat{\beta}_{1, data} - \hat{\beta}_{1, simulation} }
@@ -1819,36 +1786,196 @@ Figure 4: Comparison of observed correlations to simulation results.
 </tbody>
 </table>
 </div>
-<h1 id="replication-of-benjamin-and-diaz">Replication of Benjamin and Diaz</h1>
-<p>We replicated the simulation of <span class="citation" data-cites="benjamin2008measurement">Benjamin and Diaz (<a href="#ref-benjamin2008measurement">2008</a>)</span>: For several levels of generative <span class="math inline">\(\delta\)</span>, we ran 100 sim-subjects with 1000 trials each. For each subject, <span class="math inline">\(P_{know}\)</span> (known items) was drawn from <span class="math inline">\(N(50, 10^2)\)</span>, rounded to an integer. Instead of 4 rating categories, we used 6 to more closely correspond to our data. <span class="math inline">\(\pi\)</span> (guessing) was varied at 0 and 0.25. <span class="math inline">\(\sigma_k\)</span> was either 1 or 1.5.</p>
+<h3 id="debias-average-gammas">Debias average gammas</h3>
+<p>Next, we approximated what the average gamma &amp; da in each experiment would have been, if guesses were absent. We did this by taking the average gamma, da, and performance of each experiment, and finding their corresponding non-guessing values from the simulations.</p>
+<div class="layout-chunk" data-layout="l-body">
+<table>
+<caption><span id="tab:unnamed-chunk-1">Table 6: </span>Resolution metrics from data</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;">exp</th>
+<th style="text-align: right;">p_know</th>
+<th style="text-align: left;">parameter</th>
+<th style="text-align: right;">mean_data_estimate</th>
+<th style="text-align: right;">p_guess0.25</th>
+<th style="text-align: right;">p_guess0</th>
+<th style="text-align: right;">percent_increase</th>
+<th style="text-align: right;">mpc</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.65</td>
+<td style="text-align: left;">da</td>
+<td style="text-align: right;">0.74</td>
+<td style="text-align: right;">0.74</td>
+<td style="text-align: right;">0.85</td>
+<td style="text-align: right;">0.15</td>
+<td style="text-align: right;">0.13</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: left;">da</td>
+<td style="text-align: right;">0.93</td>
+<td style="text-align: right;">0.96</td>
+<td style="text-align: right;">1.05</td>
+<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">0.13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: left;">da</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.96</td>
+<td style="text-align: right;">1.05</td>
+<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">0.13</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: left;">da</td>
+<td style="text-align: right;">1.03</td>
+<td style="text-align: right;">1.05</td>
+<td style="text-align: right;">1.15</td>
+<td style="text-align: right;">0.12</td>
+<td style="text-align: right;">0.13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: left;">da</td>
+<td style="text-align: right;">1.10</td>
+<td style="text-align: right;">1.14</td>
+<td style="text-align: right;">1.25</td>
+<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">0.13</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: left;">da</td>
+<td style="text-align: right;">1.11</td>
+<td style="text-align: right;">1.14</td>
+<td style="text-align: right;">1.25</td>
+<td style="text-align: right;">0.12</td>
+<td style="text-align: right;">0.13</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.65</td>
+<td style="text-align: left;">gamma</td>
+<td style="text-align: right;">0.51</td>
+<td style="text-align: right;">0.50</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">0.08</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: left;">gamma</td>
+<td style="text-align: right;">0.60</td>
+<td style="text-align: right;">0.61</td>
+<td style="text-align: right;">0.66</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">0.08</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: left;">gamma</td>
+<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">0.61</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: right;">0.08</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: left;">gamma</td>
+<td style="text-align: right;">0.51</td>
+<td style="text-align: right;">0.52</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">0.08</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: left;">gamma</td>
+<td style="text-align: right;">0.64</td>
+<td style="text-align: right;">0.64</td>
+<td style="text-align: right;">0.70</td>
+<td style="text-align: right;">0.09</td>
+<td style="text-align: right;">0.08</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: left;">gamma</td>
+<td style="text-align: right;">0.57</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">0.61</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.08</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="test-subjects-against-simulated-curve-at-perfect-metacognition">Test subjects against simulated curve at perfect metacognition</h3>
+<p>Here, we attempt to test observed gamma/da against perfect metacognition. Each participant’s observed gamma/da is paired with the corresponding mean simulated estimate at maximum d_gen (corresponding to about gamma = .96) and guessing = 0.25 and the participant’s level of performance.</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre><code>
+    Paired t-test
+
+data:  tmp$gamma.perfect and tmp$gamma.data
+t = 20.822, df = 486, p-value &lt; 2.2e-16
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 0.2021151 0.2442341
+sample estimates:
+mean of the differences 
+              0.2231746 </code></pre>
+<pre><code>
+    Paired t-test
+
+data:  tmp$da.perfect and tmp$da.data
+t = 35.084, df = 486, p-value &lt; 2.2e-16
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ 0.7447912 0.8331633
+sample estimates:
+mean of the differences 
+              0.7889773 </code></pre>
+<p><img src="simulation_files/figure-html5/unnamed-chunk-2-1.png" width="624" /></p>
+</div>
+<h2 id="replication-of-benjamin-and-diaz">Replication of Benjamin and Diaz</h2>
+<p>We replicated the simulation of <span class="citation" data-cites="benjamin2008measurement">Benjamin and Diaz (<a href="#ref-benjamin2008measurement">2008</a>)</span>: For several levels of generative <em>R</em>, we ran 100 sim-subjects with 2000 trials each. For each subject, <em>K</em> was drawn from <span class="math inline">\(N(50, 10^2)\)</span>, rounded to an integer. Instead of 4 rating categories, we used 6 to more closely correspond to our data. <em>G</em> was varied at 0 and 0.25. <span class="math inline">\(\sigma_k\)</span> was either 1 or 1.5.</p>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
 <div class="layout-chunk" data-layout="l-body-outset">
-<div class="figure"><span id="fig:simsbd-plot1"></span>
-<img src="simulation_files/figure-html5/simsbd-plot1-1.png" alt="Results from simulation replicating Benjamin and Diaz's (2008) simulation scheme when guessing=0. The two columns indicate different generative $\sigma_s$s." width="768" />
-<p class="caption">
-Figure 5: Results from simulation replicating Benjamin and Diaz’s (2008) simulation scheme when guessing=0. The two columns indicate different generative <span class="math inline">\(\sigma_s\)</span>s.
-</p>
+<pre><code>
+Error in ggproto(NULL, super, call = match.call(), aesthetics = aesthetics, : object &#39;Resolution&#39; not found</code></pre>
 </div>
-</div>
-<p>The results of this simulation mirrored those of <span class="citation" data-cites="benjamin2008measurement">Benjamin and Diaz (<a href="#ref-benjamin2008measurement">2008</a>)</span>: Both gamma and <span class="math inline">\(d_a\)</span> are monotonically increasing with generative <span class="math inline">\(\delta\)</span>, but only <span class="math inline">\(d_a\)</span> has the property of scaling linearly with <span class="math inline">\(\delta\)</span>. Second, the SDT metrics are more accurately estimated via an ordinal regression <span class="citation" data-cites="KnoblauchModelingPsychophysicalData2012">(Knoblauch and Maloney <a href="#ref-KnoblauchModelingPsychophysicalData2012">2012</a>)</span>. The <span class="math inline">\(d&#39;_{ord}\)</span> metric recovers the generative parameter in every simulation, and its transformations (<span class="math inline">\(d_{a-ord}\)</span>) are easily obtained and mirror those of the line-fitting procedure.</p>
-<h2 id="introducing-guessing">Introducing guessing</h2>
-<p>However, when some correct answers are guesses (Figure <a href="#fig:simsbd-plot-guessing">6</a>, below), all resolution metrics considered here are biased downward.</p>
+<p>The results of this simulation mirrored those of <span class="citation" data-cites="benjamin2008measurement">Benjamin and Diaz (<a href="#ref-benjamin2008measurement">2008</a>)</span>: Both gamma and <span class="math inline">\(d_a\)</span> are monotonically increasing with generative <em>R</em>, but only <span class="math inline">\(d_a\)</span> has the property of scaling linearly with it. Second, the SDT metrics are more accurately estimated via an ordinal regression <span class="citation" data-cites="KnoblauchModelingPsychophysicalData2012">(Knoblauch and Maloney <a href="#ref-KnoblauchModelingPsychophysicalData2012">2012</a>)</span>. The <span class="math inline">\(d&#39;_{ord}\)</span> metric recovers the generative parameter in every simulation, and its transformations (<span class="math inline">\(d_{a-ord}\)</span>) are easily obtained and mirror those of the line-fitting procedure.</p>
+<h3 id="introducing-guessing">Introducing guessing</h3>
+<p>However, when some correct answers are guesses (Figure <a href="#fig:simsbd-plot-guessing"><strong>??</strong></a>, below), all resolution metrics considered here are biased downward.</p>
 <div class="layout-chunk" data-layout="l-body-outset">
-<div class="figure"><span id="fig:simsbd-plot-guessing"></span>
-<img src="simulation_files/figure-html5/simsbd-plot-guessing-1.png" alt="Results from simulation replicating Benjamin and Diaz's (2008) simulation scheme when guessing=0.25. The two columns indicate different generative $\sigma_s$s." width="768" />
-<p class="caption">
-Figure 6: Results from simulation replicating Benjamin and Diaz’s (2008) simulation scheme when guessing=0.25. The two columns indicate different generative <span class="math inline">\(\sigma_s\)</span>s.
-</p>
-</div>
+<pre><code>
+Error in ggproto(NULL, super, call = match.call(), aesthetics = aesthetics, : object &#39;Resolution&#39; not found</code></pre>
 </div>
 <p>Because this pattern of bias is general to all metrics considered here, for simplicity we only consider gamma and <span class="math inline">\(d_a\)</span> below, because they have most often been discussed in previous literature.</p>
 <p>For completeness, we compared estimated <span class="math inline">\(\hat{d_a}\)</span> to generative <span class="math inline">\(d_a\)</span></p>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="simulation_files/figure-html5/unnamed-chunk-1-1.png" width="624" /></p>
+<p><img src="simulation_files/figure-html5/unnamed-chunk-3-1.png" width="624" /></p>
 </div>
-<h1 id="appendix-a-simulation-function" class="appendix">Appendix A: Simulation function</h1>
+<h2 id="appendix-a-simulation-function" class="appendix">Appendix A: Simulation function</h2>
 <div class="layout-chunk" data-layout="l-body">
 <pre class="r"><code>
 sim_run &lt;- function(p_know = NA, 
@@ -1904,9 +2031,9 @@ sim_run &lt;- function(p_know = NA,
   }
 }</code></pre>
 </div>
-<h1 id="appendix-b-calculating-gamma-from-roc" class="appendix">Appendix B: Calculating gamma from ROC</h1>
+<h2 id="appendix-b-calculating-gamma-from-roc" class="appendix">Appendix B: Calculating gamma from ROC</h2>
 <div class="layout-chunk" data-layout="l-body-outset">
-<p><img src="simulation_files/figure-html5/unnamed-chunk-2-1.png" width="624" /><img src="simulation_files/figure-html5/unnamed-chunk-2-2.png" width="624" /></p>
+<p><img src="simulation_files/figure-html5/unnamed-chunk-4-1.png" width="624" /><img src="simulation_files/figure-html5/unnamed-chunk-4-2.png" width="624" /></p>
 </div>
 <div id="refs" class="references">
 <div id="ref-benjamin2008measurement">
