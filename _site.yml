@@ -1,7 +1,9 @@
 name: "math-confidence"
 title: "Confidence in Mathematics"
 output_dir: "docs"
-exclude: ["data-raw", "data", "trash", "*.bib"]
+base_url: https://mvuorre.github.io/mathPerfConf/
+repository_url: https://github.com/mvuorre/mathPerfConf
+exclude: ["data-raw", "data", "*.bib"]
 navbar:
   right:
     - text: "Description"
