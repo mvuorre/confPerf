@@ -5,6 +5,7 @@ library(radix)
 
 # Delete all existing html files
 clean_site()
+file.remove("README.md")
 
 # Build website (including rendering all .Rmd files)
 render_site(envir = new.env())
@@ -19,3 +20,6 @@ for (i in 1:6) {
   # Ensure all analyses start in clean environment
   rm(list = ls())
 }
+
+# Create README.md
+render("index.Rmd", output_format = "github_document", output_file = "README.md")

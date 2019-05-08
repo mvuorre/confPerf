@@ -1,7 +1,5 @@
 ---
-title: "Math Metacognition"
-description: |
-  Analyses of math metacognition data
+title: "Metacognition and mathematics performance"
 date: "`r Sys.Date()`"
 author:
   - name: Matti Vuorre 
@@ -11,90 +9,36 @@ output:
     toc: true
     toc_depth: 1
     self_contained: false
+  github_document:
+    html_preview: false
 site: radix::radix_website
 ---
 
 ```{r setup, include=FALSE}
 library(knitr)
 library(tidyverse)
-library(summarytools)
 opts_chunk$set(echo = FALSE)
 ```
 
-# Confidence in mathematics data and analyses
-
-Matti Vuorre <mv2521@columbia.edu>
-
-Data and analyses discussed in Vuorre & Metcalfe (working title: "Confidence in mathematics"; in prep). 
+Data and analyses related to Vuorre & Metcalfe (*"Metacognition about Mathematics is Excellent but the Relation between Performance and Resolution is Confounded by Guessing"*; in prep). 
 
 * Data from all six experiments are in a single table at `data/merged.csv`
 * Analyses are documented as an [R Markdown](https://rmarkdown.rstudio.com/) ([Radix](https://rstudio.github.io/radix/)) website at `docs/index.html`, which can be viewed at <https://mvuorre.github.io/mathPerfConf>
 * The materials are archived on OSF at <https://osf.io/np3cu/>, and github at <https://github.com/mvuorre/mathPerfConf>
 
-# Reproduce
+## Reproduce
 
 To reproduce these analyses, copy all files to a local drive. Activate the `mathPerfConf` R Project in R Studio, and run `build.R`. The analysis code is contained in `.Rmd` R Markdown files, which can also be executed individually in interactive mode.
 
 
-# Data description
+## Data description
 
-## Confidence scales
-
-Experiments 1 - 3 used a Likert scale with the following labels:
-
->0 I completely guessed.  
-1 I did more than guess, but I am not confident that my answer is correct.  
-2 I have some idea how to do this problem, but I am not confident that my answer is correct.  
-3 I am not confident that my answer is correct, nor am I confident that it is incorrect.  
-4 I am fairly confident that my answer is correct.  
-5 I am extremely confident that my answer is correct.  
-
-Experiment 5 used a 0-10 Likert scale. Experiments 4 and 6 were computer experiments that used a 0-1 VAS. 
-
-Because of these differences in scales, we have binned confidence ratings to six bins (3 experiments already had six-point ratings, so scaling is only done on experiments 4-6). The raw confidence ratings are variable `con`, binned ratings are variable `con6`.
-
-## Variables
-
-```{r, eval = T}
+```{r, echo = TRUE, message = FALSE, collapse = TRUE}
 dat <- read_csv("data/merged.csv", guess_max = 25000)
-head(dat) %>% kable()
+glimpse(dat, 1)
 ```
 
-`exclude` is a logical indicating whether the participant on that row met the exclusion criteria. `subject` labels are arbitrary numbers.
-
-Number of subjects by experiment
-
-```{r}
-dat %>% 
-  distinct(exp, subject, exclude) %>% 
-  count(exp, exclude) %>%
-  spread(exclude, n, sep = ": ") %>% 
-  kable()
-```
-
-Number of items by experiment
-
-```{r}
-dat %>% 
-  distinct(exp, item) %>% 
-  count(exp) %>% 
-  kable()
-```
-
-Number of items per subject (only non-excluded subjects are considered) by experiment
-
-```{r}
-dat %>% 
-  filter(!exclude) %>% 
-  distinct(exp, subject, item) %>% 
-  count(exp, subject) %>% 
-  group_by(exp) %>% 
-  summarise(min = min(n),
-            max = max(n),
-            iqr_l = quantile(n, .25),
-            iqr_u = quantile(n, .75)) %>% 
-  kable()
-```
+We binned confidence ratings to six bins (Experiments 1-3 already had six-point ratings, 4 & 6 were slider ratings, 5 had a 0-10 Likert scale). The raw confidence ratings are variable `con`, binned ratings are variable `con6`.
 
 ```{r, eval = F}
 # Export list of items to table

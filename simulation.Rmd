@@ -41,9 +41,9 @@ options(mc.cores = parallel::detectCores())
 ```
 
 ```{r data-load}
-dat_full <- read_csv("data/merged.csv", guess_max = 25000)
+dat <- read_csv("data/merged.csv", guess_max = 25000)
 # Drop excluded subjects
-dat <- filter(dat_full, !exclude)
+# dat <- filter(dat_full, !exclude)
 # Drop unused factor levels
 dat$subject <- fct_drop(dat$subject)
 
@@ -58,7 +58,7 @@ dat_metrics <- dat %>%
 
 ## Preface
 
-This simulation examines potential bias in measures of metacognitive resolution (gamma correlation and $d_a$) due to guessing and task knowledge.
+This simulation examines potential bias in measures of metacognitive resolution due to guessing and task knowledge.
 
 It was previously argued that gamma is unrelated to criterion test performance @Nelsoncomparisoncurrentmeasures1984:
 
@@ -80,10 +80,13 @@ example <- function(know=2, guesses=2, levels=6, n=10) {
   tibble(
     Know = c(rep(0, n-know), rep(1, know)),
     Accuracy = c(rep(0, (n-know-guesses)), rep(1, guesses+know)),
-    Confidence = ordered(ifelse(Know==0, 
-                                sample(lls[1:(levels/2)], n-know, T), 
-                                sample(lls[(levels/2+1):levels], know, T)), 
-                         levels = lls, labels = 1:levels)
+    Confidence = ordered(
+      ifelse(
+        Know==0, 
+        sample(lls[1:(levels/2)], n-know, T), 
+        sample(lls[(levels/2+1):levels], know, T)
+      ), 
+      levels = lls, labels = 1:levels)
   )[,-1]
 }
 set.seed(555)
@@ -344,24 +347,6 @@ sims_long %>%
   theme(legend.position = "bottom")
 ```
 
-We also verified a small variance between simulation runs due to large number of trials for each simulation.
-
-```{r simsp-plot, layout="l-body-outset", fig.width=8, fig.height=6}
-sims %>% 
-  mutate(d_gen = ordered(d_gen)) %>% 
-  filter(d_gen %in% c(0.55, 2.45)) %>% 
-  mutate(Guessing = as.factor(p_guess)) %>% 
-  gather(parameter, estimate, gamma, da) %>% 
-  ggplot(aes(p_know, estimate, col = Guessing)) +
-  scale_color_brewer(palette = "Set1", direction = -1) +
-  geom_point(shape=1, alpha=.25) +
-  stat_summary(fun.y=mean, geom="line") +
-  stat_summary(fun.data=mean_sdl) +
-  scale_x_continuous("Performance", breaks = pretty_breaks(5)) +
-  scale_y_continuous("Estimated value", breaks = pretty_breaks(5)) +
-  facet_grid(parameter~d_gen, scales = "free_y", labeller=label_both)
-```
-
 ### Bias
 
 We then assessed the amount of bias in the estimates (with guessing) at various levels of performance
@@ -410,15 +395,17 @@ dat_metrics %>%
 
 ### Regression test
 
-We then tested whether the performance-resolution metric regression slopes were significantly steeper in the data, vs the equivalent slope in the simulations. We used second degree polynomial regressions. We tested
+We then tested whether the performance-resolution metric regression slopes were significantly steeper in the data, vs the equivalent slope in the simulations.
+
+We tested
 
 $$
 \frac{ \hat{\beta}_{1, data} - \hat{\beta}_{1, simulation} }
 {s.e.\hat{\beta}_{1, data}}
 $$
 
-```{r regression-test, layout="l-page", fig.width=8, fig.height=3.6, fig.cap="Comparison of observed correlations to simulation results."}
-DEGREE <- 2
+```{r regression-test-fig, layout="l-page", fig.width=8, fig.height=3.6, fig.cap="Comparison of observed correlations to simulation results."}
+DEGREE <- 1
 # PLot
 tmp <- dat_metrics %>% 
   group_by(exp) %>% 
@@ -429,24 +416,42 @@ tmp <- dat_metrics %>%
   filter(p_guess == 0.25)
 tmp %>% 
   ggplot(aes(p_know, estimate)) +
-  scale_x_continuous("Knowledge", breaks = pretty_breaks(5)) +
-  scale_y_continuous("Estimate", breaks = pretty_breaks(5)) +
-  facet_grid(parameter~exp, scales="free_y") +
+  scale_x_continuous(
+    "Knowledge", 
+    breaks = pretty_breaks(5)
+  ) +
+  scale_y_continuous(
+    "Estimate", 
+    breaks = pretty_breaks(5)
+  ) +
   theme(legend.position = "none") +
-  geom_point(data = gather(dat_metrics, parameter, value, da, gamma), 
-             aes(x = p_know, y = value), 
-             col = "black", fill = "white", shape = 21, size = .5, alpha = .8) +
-  geom_smooth(data = gather(dat_metrics, parameter, value, da, gamma), 
-              aes(x = p_know, y = value), lty=2, 
-              formula = y ~ poly(x, DEGREE),
-              method = "lm", span=2, size=.66, se=T, alpha=.33, col="black") +
-  geom_smooth(method = "lm", aes(col=d_gen), se=F, 
-              formula = y ~ poly(x, DEGREE)) +
-  scale_color_viridis_c("Resolution", 
-                        values = rescale(tmp$d_gen, 
-                                         to = c(0, 1))) +
+  geom_point(
+    data = gather(mutate(dat_metrics, gamma=gz), parameter, value, da, gamma), 
+    aes(x = p_know, y = value), 
+    col = "black", fill = "white", shape = 21, size = .5, alpha = .8
+  ) +
+  geom_smooth(
+    data = gather(mutate(dat_metrics, gamma=gz), parameter, value, da, gamma), 
+    aes(x = p_know, y = value), lty=2, 
+    formula = y ~ poly(x, DEGREE),
+    method = "lm", size=.75, se=T, alpha=.33, col="black"
+  ) +
+  geom_smooth(
+    method = "lm", aes(col=d_gen), se=F, 
+    formula = y ~ poly(x, DEGREE)
+  ) +
+  scale_color_viridis_c(
+    "Resolution", 
+    values = rescale(tmp$d_gen, to = c(0, 1))
+  ) +
+  facet_grid(parameter~exp, scales="free_y") +
   theme(panel.spacing = unit(11, "pt"))
+```
 
+And then the tests
+
+```{r regression-test}
+# Simulated slope at each experiment's mean d_ord
 tmp1 <- dat_metrics %>% 
   group_by(exp) %>% 
   summarise(d_ord = mean(d_ord, na.rm=T), s = mean(s, na.rm=T)) %>% 
@@ -454,33 +459,33 @@ tmp1 <- dat_metrics %>%
   mutate(d_gen = delta_bins[which.min(abs(d_ord - delta_bins))]) %>% 
   inner_join(sims_long_bias) %>% 
   ungroup() %>% 
-  mutate(p_know = p_know-.5,
-         p_know2 = p_know^2) %>% 
   nest(-exp, -parameter) %>% 
   mutate(
-    res = map(data, ~lm(p_guess0.25 ~ p_know + p_know2, data = .)),
+    res = map(data, ~lm(p_guess0.25 ~ p_know, data = .)),
     out = map(res, ~tidy(.))
   ) %>% 
   unnest(out) %>% 
   select(exp, parameter, term, sim_coef = estimate)
 
-# Test each experiment's slope against sim slopes
+# Observed slope for each experiment
 tmp2 <- dat_metrics %>% 
+  mutate(gamma = gz) %>% 
   gather(parameter, value, gamma:da) %>% 
-  mutate(p_know = p_know-.5,
-         p_know2 = p_know^2) %>% 
   nest(-exp, -parameter) %>% 
   mutate(
-    res = map(data, ~lm(value ~ p_know + p_know2, data = .)),
+    res = map(data, ~lm(value ~ p_know, data = .)),
     out = map(res, ~tidy(.)),
     N_subj = map_dbl(data, ~nrow(.))) %>% 
   unnest(out, .drop = T) %>%
   select(exp, N_subj, parameter, term, data_coef = estimate, std.error)
 
+# Test each experiment's slope against sim slopes
 left_join(tmp1, tmp2) %>% 
-  mutate(tval = (data_coef - sim_coef) / std.error,
-         # One-sided p-values
-         pval = pt(tval, df = N_subj-3, lower=FALSE)) %>% 
+  mutate(
+    tval = (data_coef - sim_coef) / std.error,
+    # One-sided p-values
+    pval = pt(tval, df = N_subj-2, lower=FALSE)
+  ) %>% 
   filter(!(term %in% c("p_know2", "(Intercept)"))) %>%
   arrange(parameter) %>% 
   kable(
@@ -489,48 +494,13 @@ left_join(tmp1, tmp2) %>%
   )
 ```
 
-### Debias average gammas
-
-Next, we approximated what the average gamma & da in each experiment would have been, if guesses were absent. We did this by taking the average gamma, da, and performance of each experiment, and finding their corresponding non-guessing values from the simulations.
-
-```{r}
-tmp <- dat_metrics %>% 
-  group_by(exp) %>% 
-  summarise(
-    p_know = mean(p, na.rm = T),
-    gamma = mean(gamma, na.rm = T), 
-    da = mean(da, na.rm = T)
-    ) %>% 
-  group_by(exp) %>% 
-  # Get the nearest performance used in simulations
-  mutate(p_know = p_know_bins[which.min(abs(p_know - p_know_bins))]) %>% 
-  ungroup() %>% 
-  gather(parameter, mean_data_estimate, gamma, da)
-tmp2 <- sims_long_bias %>% 
-  filter(between(p_know, .65, .76))
-# Take rows for each exp and parameter where distance between observed resolution value and estimated(guessing=0.25) is the smalles
-full_join(tmp, tmp2) %>% 
-  mutate(difference = abs(mean_data_estimate - p_guess0.25)) %>% 
-  arrange(parameter, exp, difference) %>%
-  distinct(parameter, exp, .keep_all = TRUE) %>% 
-  select(exp, p_know, parameter, mean_data_estimate, p_guess0.25, p_guess0) %>% 
-  mutate(percent_increase = (p_guess0-mean_data_estimate)/mean_data_estimate) %>% 
-  group_by(parameter) %>% 
-  mutate(mpc = mean(percent_increase)) %>% 
-  kable(
-    escape = FALSE, 
-    digits = 2,
-    caption = "Resolution metrics from data"
-  )
-```
-
 ### Test subjects against simulated curve at perfect metacognition
 
-Here, we attempt to test observed gamma/da against perfect metacognition. Each participant's observed gamma/da is paired with the corresponding mean simulated estimate at maximum d_gen (corresponding to about gamma = .96) and guessing = 0.25 and the participant's level of performance.
+Here, we attempt to test observed gamma/da against near-perfect metacognition. Each participant's observed gamma/da is paired with the corresponding mean simulated estimate at maximum d_gen (corresponding to about gamma = .96) and guessing = 0.25 at the participant's level of performance.
 
 ```{r}
 tmp1 <- dat_metrics %>% 
-  select(exp, subject, gamma, da, p_know) %>% 
+  select(exp, subject, gamma = gz, da, p_know) %>% 
   group_by(exp, subject) %>% 
   mutate(p_know_bin = p_know_bins[which.min(abs(p_know - p_know_bins))]) %>% 
   ungroup()
@@ -539,6 +509,8 @@ tmp2 <- sims_mean %>%
 tmp <- left_join(tmp1, tmp2, by = c("p_know_bin" = "p_know"))
 names(tmp) <- str_replace_all(names(tmp), "\\.x", ".data")
 names(tmp) <- str_replace_all(names(tmp), "\\.y", ".perfect")
+mean(tmp$gamma.data)
+mean(tmp$gamma.perfect)
 # Are subjects gamma/da significantly lower than the gamma/da from simulation with perfect metacognition? That is, we use the difference between each subject's gamma and the simulated perfect gamma at that subjects point of performance
 t.test(tmp$gamma.perfect, tmp$gamma.data, paired = T)
 t.test(tmp$da.perfect, tmp$da.data, paired = T)
@@ -563,8 +535,25 @@ p3 <- tmp %>%
 (p3 | p2) / p1
 ```
 
+```{r}
+# Difference from perfect on performance
+# (How much below perfect are they as function of performance)
+p4 <- tmp %>% 
+  mutate(
+    gamma_diff = gamma.perfect - gamma.data,
+    da_diff = da.perfect - da.data
+  ) %>% 
+  select(exp, subject, p_know, contains("_diff")) %>% 
+  gather(key, value, gamma_diff, da_diff)
+p4 %>% 
+  ggplot(aes(p_know, value)) +
+  geom_point() +
+  geom_smooth() +
+  facet_wrap("key", scales = "free_y")
+```
 
-## Replication of Benjamin and Diaz
+
+## Appendix A: Replication of Benjamin and Diaz
 
 We replicated the simulation of @benjamin2008measurement: For several levels of generative *R*, we ran 100 sim-subjects with 2000 trials each. For each subject, *K* was drawn from $N(50, 10^2)$, rounded to an integer. Instead of 4 rating categories, we used 6 to more closely correspond to our data. *G* was varied at 0 and 0.25. $\sigma_k$ was either 1 or 1.5.
 
@@ -603,7 +592,7 @@ sims_bd %>%
     ) +
   geom_line(size=1.25) +
   geom_abline(lty=2, size = .33) +
-  scale_x_continuous(Resolution, breaks = pretty_breaks(5)) +
+  scale_x_continuous("Resolution", breaks = pretty_breaks(5)) +
   scale_y_continuous("Mean estimate", breaks = pretty_breaks(5)) +
   facet_wrap("s_gen", labeller=label_both) +
   theme(aspect.ratio = 1)
@@ -630,7 +619,7 @@ sims_bd %>%
     ) +
   geom_line(size=1.25) +
   geom_abline(lty=2, size = .33) +
-  scale_x_continuous(Resolution, breaks = pretty_breaks(5)) +
+  scale_x_continuous("Resolution", breaks = pretty_breaks(5)) +
   scale_y_continuous("Mean estimate", breaks = pretty_breaks(5)) +
   facet_wrap("s_gen", labeller=label_both) +
   theme(aspect.ratio = 1)
@@ -652,12 +641,12 @@ sims_bd %>%
   theme(aspect.ratio=1)
 ```
 
-## Appendix A: Simulation function {.appendix}
+## Appendix B: Simulation function {.appendix}
 
 ```{r show-simulation-function, ref.label="simulation-function", echo=TRUE}
 ```
 
-## Appendix B: Calculating gamma from ROC {.appendix}
+## Appendix C: Calculating gamma from ROC {.appendix}
 
 ```{r, layout="l-body-outset"}
 # Gamma can be calculated from AUC (Higham & Higham, 2018)
@@ -692,7 +681,8 @@ tmpp2 <- dat_metrics %>%
   ggplot(aes(gamma)) +
   geom_abline(lty=2) +
   theme(aspect.ratio=1)
-tmpp2 + geom_point(aes(y=gamma_zroc)) | 
-  tmpp2 + geom_point(aes(y=gamma_ord))
+(tmpp2 + geom_point(aes(y=gamma_zroc)) | 
+  tmpp2 + geom_point(aes(y=gamma_ord))) &
+  coord_cartesian(ylim=-1:1, xlim = -1:1)
 
 ```

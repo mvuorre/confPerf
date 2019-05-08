@@ -1,12 +1,12 @@
 name: "math-confidence"
-title: "Confidence in Mathematics"
+title: "Metacognition and mathematics performance"
 output_dir: "docs"
 base_url: https://mvuorre.github.io/mathPerfConf/
 repository_url: https://github.com/mvuorre/mathPerfConf
 exclude: ["data-raw", "data", "*.bib"]
 navbar:
   right:
-    - text: "Description"
+    - text: "Home"
       href: index.html
     - text: "Experiments" 
       menu:
@@ -22,7 +22,7 @@ navbar:
           href: Experiment-5.html
         - text: "Experiment 6"
           href: Experiment-6.html
-    - text: "Simulation study"
+    - text: "Simulation"
       href: simulation.html
     - icon: fab fa-github
       href: https://github.com/mvuorre/mathPerfConf
