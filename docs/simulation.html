@@ -1306,7 +1306,7 @@ Experiments
 <a href="Experiment-6.html">Experiment 6</a>
 </div>
 </div>
-<a href="simulation.html">Simulation study</a>
+<a href="simulation.html">Simulation</a>
 <a href="https://github.com/mvuorre/mathPerfConf">
 <i class="fab fa-github"></i>
 </a>
@@ -1338,7 +1338,6 @@ Experiments
 <li><a href="#simulation-overview">Simulation overview</a></li>
 <li><a href="#simulation">Simulation</a></li>
 <li><a href="#compare-data-to-simulations">Compare data to simulations</a></li>
-<li><a href="#calibration">Calibration</a></li>
 <li><a href="#appendix-a-replication-of-benjamin-and-diaz">Appendix A: Replication of Benjamin and Diaz</a></li>
 <li><a href="#appendix-b-simulation-function">Appendix B: Simulation function</a></li>
 <li><a href="#appendix-c-calculating-gamma-from-roc">Appendix C: Calculating gamma from ROC</a></li>
@@ -1349,7 +1348,7 @@ Experiments
 
 </div>
 <h2 id="preface">Preface</h2>
-<p>This simulation examines potential bias in measures of metacognitive resolution (gamma correlation and <span class="math inline">\(d_a\)</span>) due to guessing and task knowledge.</p>
+<p>This simulation examines potential bias in measures of metacognitive resolution due to guessing and task knowledge.</p>
 <p>It was previously argued that gamma is unrelated to criterion test performance <span class="citation" data-cites="Nelsoncomparisoncurrentmeasures1984">Nelson (<a href="#ref-Nelsoncomparisoncurrentmeasures1984" role="doc-biblioref">1984</a>)</span>:</p>
 <blockquote>
 <p>Property 3. The feeling-of-knowing accuracy score should be independent of overall recognition performance.<br />
@@ -1600,10 +1599,6 @@ Figure 2: Generative SDT model for simulation.
 <div class="layout-chunk" data-layout="l-body-outset">
 <p><img src="simulation_files/figure-html5/main-figure-1.png" width="672" /></p>
 </div>
-<p>We also verified a small variance between simulation runs due to large number of trials for each simulation.</p>
-<div class="layout-chunk" data-layout="l-body-outset">
-<p><img src="simulation_files/figure-html5/simsp-plot-1.png" width="768" /></p>
-</div>
 <h3 id="bias">Bias</h3>
 <p>We then assessed the amount of bias in the estimates (with guessing) at various levels of performance</p>
 <div class="layout-chunk" data-layout="l-body-outset">
@@ -1626,7 +1621,7 @@ Figure 3: Comparison of observed and corrected proportion corrected.
 </div>
 </div>
 <h3 id="regression-test">Regression test</h3>
-<p>We then tested whether the performance-resolution metric regression slopes were significantly steeper in the data, vs the equivalent slope in the simulations. We used second degree polynomial regressions. “New improved” (Higham &amp; Higham, 2018) gammas were used.</p>
+<p>We then tested whether the performance-resolution metric regression slopes were significantly steeper in the data, vs the equivalent slope in the simulations.</p>
 <p>We tested</p>
 <p><span class="math display">\[
 \frac{ \hat{\beta}_{1, data} - \hat{\beta}_{1, simulation} }
@@ -1664,10 +1659,10 @@ Figure 4: Comparison of observed correlations to simulation results.
 <td style="text-align: left;">p_know</td>
 <td style="text-align: right;">0.71</td>
 <td style="text-align: right;">92</td>
-<td style="text-align: right;">0.77</td>
+<td style="text-align: right;">0.75</td>
 <td style="text-align: right;">0.21</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.40</td>
+<td style="text-align: right;">0.16</td>
+<td style="text-align: right;">0.44</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">2</td>
@@ -1675,10 +1670,10 @@ Figure 4: Comparison of observed correlations to simulation results.
 <td style="text-align: left;">p_know</td>
 <td style="text-align: right;">0.98</td>
 <td style="text-align: right;">90</td>
-<td style="text-align: right;">0.88</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">-0.38</td>
-<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">0.84</td>
+<td style="text-align: right;">0.22</td>
+<td style="text-align: right;">-0.64</td>
+<td style="text-align: right;">0.74</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">3</td>
@@ -1686,10 +1681,10 @@ Figure 4: Comparison of observed correlations to simulation results.
 <td style="text-align: left;">p_know</td>
 <td style="text-align: right;">0.98</td>
 <td style="text-align: right;">91</td>
-<td style="text-align: right;">1.02</td>
-<td style="text-align: right;">0.18</td>
-<td style="text-align: right;">0.21</td>
-<td style="text-align: right;">0.42</td>
+<td style="text-align: right;">1.07</td>
+<td style="text-align: right;">0.17</td>
+<td style="text-align: right;">0.51</td>
+<td style="text-align: right;">0.30</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">4</td>
@@ -1697,10 +1692,10 @@ Figure 4: Comparison of observed correlations to simulation results.
 <td style="text-align: left;">p_know</td>
 <td style="text-align: right;">0.80</td>
 <td style="text-align: right;">87</td>
-<td style="text-align: right;">1.24</td>
-<td style="text-align: right;">0.24</td>
-<td style="text-align: right;">1.82</td>
-<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">1.19</td>
+<td style="text-align: right;">0.23</td>
+<td style="text-align: right;">1.70</td>
+<td style="text-align: right;">0.05</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">5</td>
@@ -1708,10 +1703,10 @@ Figure 4: Comparison of observed correlations to simulation results.
 <td style="text-align: left;">p_know</td>
 <td style="text-align: right;">1.17</td>
 <td style="text-align: right;">85</td>
-<td style="text-align: right;">1.03</td>
-<td style="text-align: right;">0.23</td>
-<td style="text-align: right;">-0.62</td>
-<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">1.16</td>
+<td style="text-align: right;">0.20</td>
+<td style="text-align: right;">-0.08</td>
+<td style="text-align: right;">0.53</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">6</td>
@@ -1719,10 +1714,10 @@ Figure 4: Comparison of observed correlations to simulation results.
 <td style="text-align: left;">p_know</td>
 <td style="text-align: right;">1.08</td>
 <td style="text-align: right;">98</td>
-<td style="text-align: right;">1.10</td>
-<td style="text-align: right;">0.25</td>
-<td style="text-align: right;">0.09</td>
-<td style="text-align: right;">0.46</td>
+<td style="text-align: right;">1.39</td>
+<td style="text-align: right;">0.21</td>
+<td style="text-align: right;">1.44</td>
+<td style="text-align: right;">0.08</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">1</td>
@@ -1730,10 +1725,10 @@ Figure 4: Comparison of observed correlations to simulation results.
 <td style="text-align: left;">p_know</td>
 <td style="text-align: right;">0.42</td>
 <td style="text-align: right;">92</td>
-<td style="text-align: right;">0.37</td>
-<td style="text-align: right;">0.11</td>
-<td style="text-align: right;">-0.46</td>
-<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">0.36</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">-0.57</td>
+<td style="text-align: right;">0.72</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">2</td>
@@ -1741,10 +1736,10 @@ Figure 4: Comparison of observed correlations to simulation results.
 <td style="text-align: left;">p_know</td>
 <td style="text-align: right;">0.54</td>
 <td style="text-align: right;">90</td>
-<td style="text-align: right;">0.42</td>
-<td style="text-align: right;">0.12</td>
-<td style="text-align: right;">-1.03</td>
-<td style="text-align: right;">0.85</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">-1.43</td>
+<td style="text-align: right;">0.92</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">3</td>
@@ -1752,10 +1747,10 @@ Figure 4: Comparison of observed correlations to simulation results.
 <td style="text-align: left;">p_know</td>
 <td style="text-align: right;">0.54</td>
 <td style="text-align: right;">91</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">-1.15</td>
-<td style="text-align: right;">0.87</td>
+<td style="text-align: right;">0.46</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">-1.09</td>
+<td style="text-align: right;">0.86</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">4</td>
@@ -1763,10 +1758,10 @@ Figure 4: Comparison of observed correlations to simulation results.
 <td style="text-align: left;">p_know</td>
 <td style="text-align: right;">0.46</td>
 <td style="text-align: right;">87</td>
-<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">0.53</td>
 <td style="text-align: right;">0.10</td>
-<td style="text-align: right;">0.98</td>
-<td style="text-align: right;">0.16</td>
+<td style="text-align: right;">0.67</td>
+<td style="text-align: right;">0.25</td>
 </tr>
 <tr class="odd">
 <td style="text-align: right;">5</td>
@@ -1774,10 +1769,10 @@ Figure 4: Comparison of observed correlations to simulation results.
 <td style="text-align: left;">p_know</td>
 <td style="text-align: right;">0.60</td>
 <td style="text-align: right;">85</td>
-<td style="text-align: right;">0.43</td>
-<td style="text-align: right;">0.10</td>
-<td style="text-align: right;">-1.83</td>
-<td style="text-align: right;">0.96</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">-1.95</td>
+<td style="text-align: right;">0.97</td>
 </tr>
 <tr class="even">
 <td style="text-align: right;">6</td>
@@ -1785,151 +1780,10 @@ Figure 4: Comparison of observed correlations to simulation results.
 <td style="text-align: left;">p_know</td>
 <td style="text-align: right;">0.57</td>
 <td style="text-align: right;">98</td>
-<td style="text-align: right;">0.44</td>
-<td style="text-align: right;">0.10</td>
-<td style="text-align: right;">-1.24</td>
-<td style="text-align: right;">0.89</td>
-</tr>
-</tbody>
-</table>
-</div>
-<h3 id="debias-average-gammas">Debias average gammas</h3>
-<p>Next, we approximated what the average gamma &amp; da in each experiment would have been, if guesses were absent. We did this by taking the average gamma, da, and performance of each experiment, and finding their corresponding non-guessing values from the simulations.</p>
-<div class="layout-chunk" data-layout="l-body">
-<table>
-<caption><span id="tab:unnamed-chunk-1">Table 6: </span>Resolution metrics from data</caption>
-<thead>
-<tr class="header">
-<th style="text-align: right;">exp</th>
-<th style="text-align: right;">p_know</th>
-<th style="text-align: left;">parameter</th>
-<th style="text-align: right;">mean_data_estimate</th>
-<th style="text-align: right;">p_guess0.25</th>
-<th style="text-align: right;">p_guess0</th>
-<th style="text-align: right;">percent_increase</th>
-<th style="text-align: right;">mpc</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0.65</td>
-<td style="text-align: left;">da</td>
-<td style="text-align: right;">0.67</td>
-<td style="text-align: right;">0.66</td>
-<td style="text-align: right;">0.75</td>
-<td style="text-align: right;">0.12</td>
-<td style="text-align: right;">0.11</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">0.75</td>
-<td style="text-align: left;">da</td>
-<td style="text-align: right;">0.88</td>
-<td style="text-align: right;">0.87</td>
-<td style="text-align: right;">0.95</td>
-<td style="text-align: right;">0.08</td>
-<td style="text-align: right;">0.11</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">0.75</td>
-<td style="text-align: left;">da</td>
-<td style="text-align: right;">0.94</td>
-<td style="text-align: right;">0.96</td>
-<td style="text-align: right;">1.05</td>
-<td style="text-align: right;">0.12</td>
-<td style="text-align: right;">0.11</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">0.65</td>
-<td style="text-align: left;">da</td>
-<td style="text-align: right;">0.97</td>
-<td style="text-align: right;">0.99</td>
-<td style="text-align: right;">1.15</td>
-<td style="text-align: right;">0.19</td>
-<td style="text-align: right;">0.11</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">0.75</td>
-<td style="text-align: left;">da</td>
-<td style="text-align: right;">1.15</td>
-<td style="text-align: right;">1.14</td>
-<td style="text-align: right;">1.25</td>
+<td style="text-align: right;">0.51</td>
 <td style="text-align: right;">0.09</td>
-<td style="text-align: right;">0.11</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">0.75</td>
-<td style="text-align: left;">da</td>
-<td style="text-align: right;">1.14</td>
-<td style="text-align: right;">1.14</td>
-<td style="text-align: right;">1.25</td>
-<td style="text-align: right;">0.10</td>
-<td style="text-align: right;">0.11</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0.65</td>
-<td style="text-align: left;">gamma</td>
-<td style="text-align: right;">0.35</td>
-<td style="text-align: right;">0.36</td>
-<td style="text-align: right;">0.41</td>
-<td style="text-align: right;">0.17</td>
-<td style="text-align: right;">0.11</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">0.75</td>
-<td style="text-align: left;">gamma</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">0.43</td>
-<td style="text-align: right;">0.46</td>
-<td style="text-align: right;">0.03</td>
-<td style="text-align: right;">0.11</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">0.75</td>
-<td style="text-align: left;">gamma</td>
-<td style="text-align: right;">0.47</td>
-<td style="text-align: right;">0.47</td>
-<td style="text-align: right;">0.52</td>
-<td style="text-align: right;">0.09</td>
-<td style="text-align: right;">0.11</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">0.65</td>
-<td style="text-align: left;">gamma</td>
-<td style="text-align: right;">0.48</td>
-<td style="text-align: right;">0.50</td>
-<td style="text-align: right;">0.56</td>
-<td style="text-align: right;">0.17</td>
-<td style="text-align: right;">0.11</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">0.75</td>
-<td style="text-align: left;">gamma</td>
-<td style="text-align: right;">0.55</td>
-<td style="text-align: right;">0.56</td>
-<td style="text-align: right;">0.61</td>
-<td style="text-align: right;">0.11</td>
-<td style="text-align: right;">0.11</td>
-</tr>
-<tr class="even">
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">0.75</td>
-<td style="text-align: left;">gamma</td>
-<td style="text-align: right;">0.54</td>
-<td style="text-align: right;">0.56</td>
-<td style="text-align: right;">0.61</td>
-<td style="text-align: right;">0.12</td>
-<td style="text-align: right;">0.11</td>
+<td style="text-align: right;">-0.66</td>
+<td style="text-align: right;">0.74</td>
 </tr>
 </tbody>
 </table>
@@ -1963,33 +1817,10 @@ alternative hypothesis: true difference in means is not equal to 0
 sample estimates:
 mean of the differences 
               0.8282894 </code></pre>
+<p><img src="simulation_files/figure-html5/unnamed-chunk-1-1.png" width="624" /></p>
+</div>
+<div class="layout-chunk" data-layout="l-body">
 <p><img src="simulation_files/figure-html5/unnamed-chunk-2-1.png" width="624" /></p>
-</div>
-<div class="layout-chunk" data-layout="l-body">
-<p><img src="simulation_files/figure-html5/unnamed-chunk-3-1.png" width="624" /></p>
-</div>
-<div class="layout-chunk" data-layout="l-body">
-<p><img src="simulation_files/figure-html5/unnamed-chunk-4-1.png" width="624" /></p>
-<pre><code>
-Anova Table (Type 3 tests)
-
-Response: d
-      Effect     df  MSE        F ges p.value
-1 p_know_bin 9, 442 0.04 5.98 *** .11  &lt;.0001
----
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;+&#39; 0.1 &#39; &#39; 1</code></pre>
-</div>
-<h2 id="calibration">Calibration</h2>
-<p>Guessing bias will lead to underconfidence</p>
-<div class="layout-chunk" data-layout="l-body">
-<pre><code>
-# A tibble: 4 x 2
-  prop_corr p_know
-      &lt;dbl&gt;  &lt;dbl&gt;
-1      0.25  0    
-2      0.5   0.333
-3      0.75  0.667
-4      1     1    </code></pre>
 </div>
 <h2 id="appendix-a-replication-of-benjamin-and-diaz">Appendix A: Replication of Benjamin and Diaz</h2>
 <p>We replicated the simulation of <span class="citation" data-cites="benjamin2008measurement">Benjamin and Diaz (<a href="#ref-benjamin2008measurement" role="doc-biblioref">2008</a>)</span>: For several levels of generative <em>R</em>, we ran 100 sim-subjects with 2000 trials each. For each subject, <em>K</em> was drawn from <span class="math inline">\(N(50, 10^2)\)</span>, rounded to an integer. Instead of 4 rating categories, we used 6 to more closely correspond to our data. <em>G</em> was varied at 0 and 0.25. <span class="math inline">\(\sigma_k\)</span> was either 1 or 1.5.</p>
@@ -1997,20 +1828,28 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;+&
 
 </div>
 <div class="layout-chunk" data-layout="l-body-outset">
-<pre><code>
-Error in ggproto(NULL, super, call = match.call(), aesthetics = aesthetics, : object &#39;Resolution&#39; not found</code></pre>
+<div class="figure"><span id="fig:simsbd-plot1"></span>
+<img src="simulation_files/figure-html5/simsbd-plot1-1.png" alt="Results from simulation replicating Benjamin and Diaz's (2008) simulation scheme when guessing=0. The two columns indicate different generative $\sigma_s$s." width="768" />
+<p class="caption">
+Figure 5: Results from simulation replicating Benjamin and Diaz’s (2008) simulation scheme when guessing=0. The two columns indicate different generative <span class="math inline">\(\sigma_s\)</span>s.
+</p>
+</div>
 </div>
 <p>The results of this simulation mirrored those of <span class="citation" data-cites="benjamin2008measurement">Benjamin and Diaz (<a href="#ref-benjamin2008measurement" role="doc-biblioref">2008</a>)</span>: Both gamma and <span class="math inline">\(d_a\)</span> are monotonically increasing with generative <em>R</em>, but only <span class="math inline">\(d_a\)</span> has the property of scaling linearly with it. Second, the SDT metrics are more accurately estimated via an ordinal regression <span class="citation" data-cites="KnoblauchModelingPsychophysicalData2012">(Knoblauch and Maloney <a href="#ref-KnoblauchModelingPsychophysicalData2012" role="doc-biblioref">2012</a>)</span>. The <span class="math inline">\(d&#39;_{ord}\)</span> metric recovers the generative parameter in every simulation, and its transformations (<span class="math inline">\(d_{a-ord}\)</span>) are easily obtained and mirror those of the line-fitting procedure.</p>
 <h3 id="introducing-guessing">Introducing guessing</h3>
-<p>However, when some correct answers are guesses (Figure <a href="#fig:simsbd-plot-guessing"><strong>??</strong></a>, below), all resolution metrics considered here are biased downward.</p>
+<p>However, when some correct answers are guesses (Figure <a href="#fig:simsbd-plot-guessing">6</a>, below), all resolution metrics considered here are biased downward.</p>
 <div class="layout-chunk" data-layout="l-body-outset">
-<pre><code>
-Error in ggproto(NULL, super, call = match.call(), aesthetics = aesthetics, : object &#39;Resolution&#39; not found</code></pre>
+<div class="figure"><span id="fig:simsbd-plot-guessing"></span>
+<img src="simulation_files/figure-html5/simsbd-plot-guessing-1.png" alt="Results from simulation replicating Benjamin and Diaz's (2008) simulation scheme when guessing=0.25. The two columns indicate different generative $\sigma_s$s." width="768" />
+<p class="caption">
+Figure 6: Results from simulation replicating Benjamin and Diaz’s (2008) simulation scheme when guessing=0.25. The two columns indicate different generative <span class="math inline">\(\sigma_s\)</span>s.
+</p>
+</div>
 </div>
 <p>Because this pattern of bias is general to all metrics considered here, for simplicity we only consider gamma and <span class="math inline">\(d_a\)</span> below, because they have most often been discussed in previous literature.</p>
 <p>For completeness, we compared estimated <span class="math inline">\(\hat{d_a}\)</span> to generative <span class="math inline">\(d_a\)</span></p>
 <div class="layout-chunk" data-layout="l-body">
-<p><img src="simulation_files/figure-html5/unnamed-chunk-6-1.png" width="624" /></p>
+<p><img src="simulation_files/figure-html5/unnamed-chunk-3-1.png" width="624" /></p>
 </div>
 <h2 id="appendix-b-simulation-function" class="appendix">Appendix B: Simulation function</h2>
 <div class="layout-chunk" data-layout="l-body">
@@ -2070,7 +1909,7 @@ sim_run &lt;- function(p_know = NA,
 </div>
 <h2 id="appendix-c-calculating-gamma-from-roc" class="appendix">Appendix C: Calculating gamma from ROC</h2>
 <div class="layout-chunk" data-layout="l-body-outset">
-<p><img src="simulation_files/figure-html5/unnamed-chunk-7-1.png" width="624" /><img src="simulation_files/figure-html5/unnamed-chunk-7-2.png" width="624" /></p>
+<p><img src="simulation_files/figure-html5/unnamed-chunk-4-1.png" width="624" /><img src="simulation_files/figure-html5/unnamed-chunk-4-2.png" width="624" /></p>
 </div>
 <div id="refs" class="references" role="doc-bibliography">
 <div id="ref-benjamin2008measurement">
