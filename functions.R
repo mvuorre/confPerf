@@ -1,166 +1,215 @@
-# Function used in data analysis and simulations
-
-#' metrics: Function to estimate performance and resolution metrics
+#' Cut ratings to a desired number of bins
 #'
-#' @param data A data.frame (or equivalent)
-#' @param accuracy Name of column in `data` that contains
-#' 0s and 1s denoting accuracy of each response, string
-#' @param confidence Name of column in `data` that contains
-#' continuous raw ratings of confidence, string
-#' @param confidenceK Name of column in `data` that contains
-#' categorical ratings of confidence, string
-#' @param ordinal Should parameters of ordinal regression be returned, logical
-#' @param levels Number of confidence levels (0 -> levels-1), integer
+#' @param x vector of ratings
+#' @param min minimum value of rating scale
+#' @param max maximum value of rating scale
+#' @param n_bins desired number of bins
 #' @param ... Not used
 #'
-#' @return data frame with resolution metrics
+#' @return Vector of ratings as an ordered factor
+#' @export
 #'
-metrics <- function(data,
-                    accuracy = "accuracy",
-                    confidenceK = "con6",
-                    confidence = "con",
-                    ordinal = FALSE,
-                    levels = 6,
-                    ...) {
-  accuracy <- data[[accuracy]]
-  conK <- data[[confidenceK]]
-
-  # If continuous confidence provided, use it
-  if (!is.null(confidence)) {
-    con <- data[[confidence]]
-    gamma <- tryCatch({
-      Hmisc::rcorr.cens(accuracy, con, outx = TRUE)[2]
-    },
-    error = function(e) return(NA)
-    )
-    r <- tryCatch({
-      cor.test(accuracy, con, method = "pearson")$estimate
-    },
-    error = function(e) return(NA)
-    )
-    con_m <- mean(con, na.rm = T)
-  } else {
-    # Otherwise use ordinal variable
-    gamma <- tryCatch({
-      vcdExtra::GKgamma(table(accuracy, conK))$gamma
-    },
-    error = function(e) return(NA)
-    )
-    r <- tryCatch({
-      cor.test(accuracy, conK, method = "pearson")$estimate
-    },
-    error = function(e) return(NA)
-    )
-    con_m <- mean(as.integer(conK), na.rm = T)
-  }
-
-
-  p <- mean(accuracy, na.rm = T)
-  n <- length(accuracy)
-
-  # Get SDT measures with linear regression of zROC
-  # Correct for zero observations in empty cells by ensuring all cells
-  # exist (forcing factors ensures that all levels are enumerated)
-  sdt <- data.frame(
-    accuracy = factor(accuracy, levels = 0:1), 
-    conK = factor(conK, levels = 0:(levels-1))
-  )
-  sdt <- data.frame(table(sdt))
-  # ... and then add .5 to all cells
-  sdt$Freq <- sdt$Freq + .5
-  # Rates and cumulative zRates
-  hits <- sdt$Freq[sdt$accuracy == 1]
-  fas <- sdt$Freq[sdt$accuracy == 0]
-  hr <- cumsum(rev(hits) / sum(hits))
-  far <- cumsum(rev(fas) / sum(fas))
-  zhr <- qnorm(hr)
-  zfar <- qnorm(far)
-
-  sdt_metrics <- tryCatch({
-    coefs <- coef(lm(zhr[-length(zhr)] ~ zfar[-length(zfar)]))
-    y0 <- coefs[[1]]
-    m <- coefs[[2]]
-    s <- 1 / m
-    da <- (sqrt(2) * y0) / sqrt(1 + m^2)
-    cbind(da, y0, s)
-  }, error = function(e) {
-    return(cbind(da = NA, y0 = NA, s = NA))
-  })
-
-  # SDT measures using ordinal regression
-  if (ordinal) {
-    sdt_metrics_ord <- tryCatch({
-      fit <- ordinal::clm(
-        ordered(conK) ~ factor(accuracy),
-        link = "probit",
-        scale = ~accuracy,
-        control = list(maxIter = 100, convergence = "stop")
-      )
-      d_ord <- fit$beta
-      s_ord <- exp(fit$zeta)
-      m <- 1 / s
-      da_ord <- (sqrt(2) * (d_ord / s_ord)) / sqrt(1 + m^2)
-      cbind(da_ord, d_ord, s_ord)
-    }, error = function(x) {
-      return(cbind(da_ord = NA, d_ord = NA, s_ord = NA))
-    })
-    sdt_metrics <- cbind(sdt_metrics, sdt_metrics_ord)
-  }
-  
-  # Gamma using ROC (Higham & Higham, 2018)
-  az_zroc <- pnorm(y0 / sqrt(1 + (1/s)^2 ))
-  gz <- 2 * az_zroc - 1
-  # Gamma using trapezoidal rule to approximate AUC
-  gt <- 2 * DescTools::AUC(far, hr, method = "trapezoid") - 1
-  
-  data.frame(gamma, gz, gt, sdt_metrics, r, p, n, con_m, row.names = NULL)
+#' @examples
+bin_ratings <- function(x, min, max, n_bins, ...) {
+  # To [0, 1] interval
+  unit <- (x - min) / (max - min)
+  # To factor, ensuring levels exist
+  bp <- c(-Inf, seq(0, 1, length = n_bins))
+  factor(cut(unit, breaks = bp, labels = FALSE), levels = 1:n_bins)
 }
 
-library(ggstance)
-#' Quasi-brinley plots for resolution-performance scatterplots
+
+#' Create an SDT table of cumulative proportions
 #'
-#' @param data 
-#' @param x 
-#' @param y 
+#' @param x Binary predictive variable (e.g. accuracy or stimulus)
+#' @param y Ordinal ratings
+#' @param constant Constant to add to rates
+#' @param ... Passed to bin_ratings (min, max, n_bins)
 #'
 #' @return
 #' @export
 #'
 #' @examples
-brinley <- function(data, x, y) {
+sdt_roc <- function(x, y, constant, ...) {
+  
+  xcut <- factor(x, levels = 0:1)
+  ycut <- bin_ratings(y, ...)
+  
+  tab <- table(xcut, ycut) # Frequency table
+  tab <- tab + constant  # Add constant? (if it is zero no constant is added)
+  tab <- tab / rowSums(tab) # Proportions
+  # Cumulate proportions from high rating to low rating
+  roc <- apply(tab, 1, function(x) rev(cumsum(rev(x))))
+  roc
+}
+
+#' Calculate resolution metrics
+#'
+#' @param data A data frame
+#' @param x Binary predictive variable, unquoted
+#' @param y Raw ratings, unquoted
+#' @param constant Constant added to rates
+#' @param ... Passed to bin_ratings (min, max, n_bins)
+#'
+#' @return Data frame of resolution metrics
+#' @export
+#'
+#' @examples
+metrics <- function(data, x, y, constant, ...) {
   x <- enquo(x)
   y <- enquo(y)
   xv <- pull(data, !!x)
   yv <- pull(data, !!y)
-  xs <- Hmisc::smean.cl.boot(xv)
-  ys <- Hmisc::smean.cl.boot(yv)
-  xmin <- min(xv) - .05
-  ymin <- min(yv) - .05
-  ymax <- max(yv) + .05
-  p <- ggplot(data, aes(!!x, !!y)) +
-    geom_hline(yintercept = 0, lty = 2, size = .33) +
-    geom_point(shape = 21, fill = "white", alpha = .75, stroke = .8) +
-    geom_smooth(method = lm, col = "black", size = .75, alpha = .33) +
-    scale_x_continuous(
-      breaks = c(.25, .5, .75, 1), 
-      limits = c(xmin, 1.05), expand = c(0, 0)
-    ) +
-    scale_y_continuous(
-      limits = c(ymin, ymax), expand = c(0, 0)
-    ) +
-    labs(
-      x = "Proportion correct",
-      y = "Gamma"
-    ) +
-    coord_cartesian(clip = "off") +
-    theme(aspect.ratio = 1, panel.border = element_rect(size = .33))
-  p +
-    annotate(
-      x = xs[1], xmin = xs[2], xmax = xs[3], 
-      y = ymin, geom = "pointrangeh", fatten = 2.25, size = 1.3
-    ) +
-    annotate(
-      y = ys[1], ymin = ys[2], ymax = ys[3], 
-      x = xmin, geom = "pointrange", fatten = 2.25, size = 1.3
+  
+  proportion_correct <- mean(xv, na.rm = T)
+  # stopifnot(proportion_correct < 1)
+  mean_rating <- mean(yv, na.rm = T)
+  n_trials <- length(xv)
+  
+  # Measures using raw Y
+  phi <- tryCatch({
+    cor.test(xv, cut(yv, 2, labels = FALSE))$estimate
+  }, error = function(e) {
+    return(NA)
+  })
+  gamma_old <- tryCatch({
+    vcdExtra::GKgamma(table(xv, yv))$gamma
+  }, error = function(e) {
+    return(NA)
+  })
+  pearson_r <- tryCatch({
+    cor.test(xv, yv)$estimate
+  }, error = function(e) {
+    return(NA)
+  })
+  
+  # Linear regression of zROC
+  roc <- sdt_roc(xv, yv, constant, ...)
+  zroc <- data.frame(qnorm(roc))
+  zroc_ <- tryCatch({
+    # Remove rows where zrate is infinite
+    zroc <- subset(zroc, (!X0 %in% c(-Inf, Inf) & !X1 %in% c(-Inf, Inf)))
+    zroc_lm <- lm(X1 ~ X0, data = zroc)
+    zroc_d <- coef(zroc_lm)[["(Intercept)"]]
+    zroc_m <- coef(zroc_lm)[["X0"]]
+    zroc_s <- 1 / zroc_m
+    zroc_da <- (sqrt(2) * zroc_d) / sqrt(1 + zroc_m^2)
+    # Gamma using zROC (Higham & Higham, 2018)
+    zroc_auc <- pnorm(zroc_d / sqrt(1 + (1 / zroc_s)^2))
+    zroc_auc_gamma <- 2 * zroc_auc - 1
+    tibble(zroc_d, zroc_da, zroc_s, zroc_auc, zroc_auc_gamma)
+  }, error = function(e) {
+    return(
+      tibble(
+        zroc_d = NA, 
+        zroc_da = NA, 
+        zroc_s = NA, 
+        zroc_auc = NA, 
+        zroc_auc_gamma = NA
+      )
     )
+  })
+  
+  # Ordinal regression on table of counts to allow adding constant
+  ord_data <- tibble(
+    xv = factor(xv, levels = 0:1), 
+    yv = bin_ratings(yv, ...)
+  )
+  ord_data <- count(ord_data, xv, yv, .drop = FALSE)
+  ord_data$n <- ord_data$n + constant
+  ord_ <- tryCatch({
+    fit <- ordinal::clm(
+      ordered(yv) ~ factor(xv),
+      link = "probit",
+      scale = ~ factor(xv),
+      weights = n,
+      control = list(maxIter = 500, convergence = "stop"),
+      data = ord_data
+    )
+    ord_d <- fit$beta
+    ord_s <- exp(fit$zeta)
+    ord_m <- 1 / ord_s
+    ord_da <- (sqrt(2) * (ord_d / ord_s)) / sqrt(1 + ord_m^2)
+    # Gamma using ordinal model's zROC
+    ord_auc <- pnorm(ord_d / sqrt(1 + (1 / ord_s)^2))
+    ord_auc_gamma <- 2 * ord_auc - 1
+    tibble(ord_d, ord_da, ord_s, ord_auc, ord_auc_gamma)
+  }, error = function(e) {
+    return(tibble(ord_d = NA, ord_da = NA, ord_s = NA, ord_auc = NA, ord_auc_gamma = NA))
+  })
+  
+  
+  # Gamma using trapezoidal rule to approximate AUC
+  trap_auc <- DescTools::AUC(roc[, "0"], roc[, "1"], method = "trapezoid")
+  # auc_step <- DescTools::AUC(roc[,"0"], roc[,"1"], method = "step")
+  # auc_spline <- DescTools::AUC(roc[,"0"], roc[,"1"], method = "spline")
+  trap_auc_gamma <- 2 * trap_auc - 1
+  
+  out <- tibble(
+    proportion_correct, mean_rating, n_trials,
+    phi, pearson_r, gamma_old,
+    trap_auc, trap_auc_gamma
+  )
+  bind_cols(out, zroc_, ord_)
 }
+
+
+# Simulation --------------------------------------------------------------
+
+sim_run <- function(p_know = NA, 
+                    n_trials = 100, 
+                    p_guess = 0,
+                    d_gen = 1, 
+                    s_gen = 1,
+                    tau_gen = c(-Inf, -1, -.5, 0, .5, 1, Inf),
+                    constant = 0,
+                    min = 1,
+                    max = 6,
+                    n_bins = 6,
+                    out = "pars",
+                    ...) {
+  
+  n_bins <- length(tau_gen) - 1
+  
+  # Performance (p(know) to number of known items)
+  stopifnot(p_know <= 1 & p_know >= 0)
+  n_know <- ceiling(p_know * n_trials)
+  
+  # Number of known items to number of accurate answers
+  accuracy <- c(
+    rbinom(n_trials - n_know, 1, p_guess),
+    rep(1, times = n_know)
+  )
+  
+  # Metacognition evidence values
+  evidence <- c(
+    rnorm(n_trials - n_know, 0, 1),
+    rnorm(n_know, d_gen, s_gen)
+  )
+  
+  # Evidence values to confidence ratings
+  rating <- cut(
+    evidence, 
+    breaks = tau_gen, 
+    labels = FALSE
+  )
+  # Ratings to 0 - 5, as in math data
+  # rating <- rating-1
+  
+  # Return data or parameters
+  dat <- data.frame(accuracy, rating)
+  if (out == "pars") {
+    metrics(
+      data = dat, 
+      x = accuracy, 
+      y = rating, 
+      constant = constant,
+      min = min,
+      max = max,
+      n_bins = n_bins
+    )
+  } else if (out == "data") {
+    dat
+  }
+}
+
