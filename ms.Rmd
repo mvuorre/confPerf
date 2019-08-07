@@ -139,7 +139,7 @@ Up to 25 students at a time completed the pencil and paper tests in a single cla
 
 ## Experiment 1B: Method
 
-Experiment 1B was a direct replication of Experiment 1A. A new sample of ninety-one 8^th^ grade students from the same New York City public school participated. Voluntary consent was obtained from students and their parents. The experiment was approved by the Columbia University Internal Review Board and by the New York City Board of Education. The procedure was identical to Experiment 1A.
+Experiment 1B was a direct replication of Experiment 1A. A new sample of ninety-two 8^th^ grade students from the same New York City public school participated. Voluntary consent was obtained from students and their parents. The experiment was approved by the Columbia University Internal Review Board and by the New York City Board of Education. The procedure was identical to Experiment 1A.
 
 ## Experiment 1C: Method
 
@@ -172,7 +172,7 @@ In this experiment, participants completed four mathematics tests as part of an 
 ## Results
 
 ```{r math-data-load, cache = TRUE}
-math <- read_csv("data/merged.csv", guess_max = 25000)
+math <- read_rds("data/math.rds")
 math <- mutate(math, Experiment = factor(exp, labels = paste0(1, LETTERS[1:6])))
 math <- select(math, -exp, -group, -type)
 math_subjects <- group_by(math, Experiment) %>%
@@ -601,7 +601,11 @@ bind_cols(out, bind_rows(pars)) %>%
 
 ```{r trivia-prep}
 trivia <- read_rds("data/exp-trivia.rds") %>% 
-  mutate(condition = factor(condition, levels = c("free", "mafc"), labels = c("Free", "2AFC")))
+  mutate(condition = factor(
+    condition, 
+    levels = c("free", "mafc"), 
+    labels = c("Free", "2AFC")
+  ))
 tp <- read_rds("data/exp-trivia-participants.rds")
 tsex <- sum(tp$Sex=="Female", na.rm = T)
 tage <- range(tp$age, na.rm = T)

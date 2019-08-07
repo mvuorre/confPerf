@@ -9,3 +9,9 @@ docs/README.html
 docs/**/*.pdf
 # Temporary data and model objects
 *.rda
+
+Supplementary.Rmd
+*.docx
+tests.R
+*_cache/
+*_files/
