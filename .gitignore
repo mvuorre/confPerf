@@ -8,6 +8,7 @@ data-raw/
 
 # Output files
 *.docx
+*.pdf
 *_cache/
 *_files/
 
