@@ -2,16 +2,18 @@
 .Rhistory
 .RData
 .Ruserdata
+
 # Folders
 data-raw/
+
 # Output files
-docs/README.html
-docs/**/*.pdf
+*.docx
+*_cache/
+*_files/
+
 # Temporary data and model objects
 *.rda
 
+# Additional analyses
 Supplementary.Rmd
-*.docx
 tests.R
-*_cache/
-*_files/
