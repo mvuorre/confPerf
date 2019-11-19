@@ -1,42 +1,46 @@
 ---
-title             : "On the relation between metacognitive monitoring and domain knowledge"
-shorttitle        : "Metacognitive resolution and domain knowledge"
+title: "On the relation between metacognitive monitoring and domain knowledge"
+shorttitle: "Metacognitive resolution and domain knowledge"
 
 author: 
-  - name          : "Matti Vuorre"
-    affiliation   : "1"
-    corresponding : yes
-    address       : "406 Schermerhorn Hall, 1190 Amsterdam Avenue, New York, NY 10027"
-    email         : "vuorre@psych.columbia.edu"
-  - name          : "Janet Metcalfe"
-    affiliation   : "1"
+  - name: "Matti Vuorre"
+    affiliation: "1"
+    corresponding: yes
+    address: "406 Schermerhorn Hall, 1190 Amsterdam Avenue, New York, NY 10027"
+    email: "vuorre@psych.columbia.edu"
+  - name: "Janet Metcalfe"
+    affiliation: "1"
 
 affiliation:
-  - id            : "1"
-    institution   : "Columbia University"
+  - id: "1"
+    institution: "Columbia University"
 
 authornote: |
-  This research was supported, in part, by Institute of Education Science grant (R305A150467) awarded to JM. The authors are solely responsible for the content of this article. The data and analysis code supporting this manuscript are available at https://osf.io/np3cu/.
+  This research was supported, in part, by Institute of Education Science grant (R305A150467) awarded to JM. The authors are solely responsible for the content of this article. The data and code supporting this manuscript are available at https://osf.io/np3cu/.
 
 abstract: |
-  Metacognitive resolution refers to people's ability to tell their correct answers apart from incorrect answers, and is theorized an important factor in learning. Resolution---the trial-by-trial association between response accuracy and metacognitive endorsement of that response's accuracy---is a distinct ability from knowledge in the domain of testing, and instead indicates a higher-order self-evaluation of one's cognitive states. It is therefore important that measures of resolution are independent of domain knowledge. We conducted six experiments that revealed a robust positive correlation between metacognitive resolution and performance in multiple-choice mathematics testing. A simulation study suggested that resolution metrics are increasingly negatively biased with decreasing performance, because multiple-choice tasks permit correct guessing. Finally, an experiment supported the guessing-related confound hypothesis: Resolution and performance were positively correlated in multiple-choice testing, but not in free-response testing. This study brings to light a previously underappreciated limitation in assessing metacognitive resolution and its relation to task performance when the criterion task involves guessing.
+  Metacognitive resolution refers to people's ability to tell their correct answers apart from incorrect answers, and is theorized an important factor in learning. Resolution---the trial-by-trial association between response accuracy and metacognitive endorsement of that response's accuracy---is a distinct ability from knowledge in the domain of testing, and instead indicates a higher-order self-evaluation. It is therefore important that measures of resolution are independent of domain knowledge. Six multiple-choice mathematics experiments revealed a robust positive correlation between resolution and performance. A simulation study suggested that correct guesses afforded by multiple-choice testing necessarily lead to a correlation between resolution and performance. Finally, an experiment supported this hypothesis: Resolution and performance were positively correlated in multiple-choice, but not in free-response testing. These results suggest that the "unskilled and unaware" effect, whereby poorly performing individuals appear unaware of their lack of ability, may be artifactual in multiple-choice tasks that define "awareness" as metacognitive resolution.
   
-keywords          : "metacognition, confidence, measurement"
-wordcount         : "`r wordcountaddin::word_count()`"
+keywords: "metacognition, confidence, measurement, unskilled and unaware"
+wordcount: "`r wordcountaddin::word_count()`"
 
-bibliography      : "references.bib"
+bibliography: "references.bib"
 
-floatsintext      : yes
-figurelist        : no
-tablelist         : no
-footnotelist      : no
-linenumbers       : no
-mask              : no
-draft             : no
+floatsintext: yes
+figurelist: no
+tablelist: no
+footnotelist: no
+linenumbers: no
+mask: no
+draft: no
 
-documentclass     : "apa6"
-classoption       : "man"
-output            : papaja::apa6_word
+documentclass: "apa6"
+classoption: "man"
+output: 
+  papaja::apa6_pdf:
+    keep_tex: false
+  papaja::apa6_word:
+    default 
 ---
 
 ```{r setup, include = FALSE}
@@ -46,7 +50,7 @@ library(knitr)
 library(Hmisc)
 library(afex)
 library(ggbeeswarm)
-library(flextable)
+library(kableExtra)
 library(patchwork)
 library(broom)
 library(scales)
@@ -58,14 +62,12 @@ library(parallel)
 opts_chunk$set(
   echo = FALSE,
   warning = FALSE,
-  cache = TRUE,
-  dev = c("png", "pdf"),
-  fig.ext = c("png", "pdf"),
-  fig.retina = 2
+  cache = TRUE, 
+  fig.align = 'center'
 )
 options(mc.cores = parallel::detectCores())
 theme_set(
-  theme_linedraw(base_size = 8) + 
+  theme_linedraw(base_size = 10) + 
     theme(panel.grid = element_blank(), legend.position = "right")
 )
 # Function to format p values
@@ -131,7 +133,7 @@ Participants completed four tests administered on four separate days of an after
 
 [^2]: These tests can be downloaded from <http://www.nysedregents.org/algebraone/>. Some tests included a free-response problem but we excluded them from the current analysis (not enough free-response problems were included for a meaningful analysis).
 
-```{r math-example, out.width = "4cm", fig.cap = "Example mathematics problem from Experiment 1."}
+```{r math-example, fig.cap = "Example mathematics problem from Experiment 1."}
 include_graphics("example-problem-14.8.13.png")
 ```
 
@@ -145,7 +147,7 @@ Experiment 1B was a direct replication of Experiment 1A. A new sample of ninety-
 
 Experiment 1C was a close but not exact replication of Experiments 1A and B. Ninety-one 8^th^ grade students participated from the same New York City public school as in Experiments 1A and B. We obtained voluntary consent from the students and their parents. The experiment was approved by the Columbia University Internal Review Board and by the New York City Board of Education.
 
-The students completed three pen-and-paper tests, separated by eight days of in-class instruction, as part of an after-school mathematics tutorial. Each test consisted of 20 four-alternative multiple-choice problems from the same pool of problems as in experiments 1A and B. Multiple problems were printed on each page of the test, but otherwise the test procedure was the same as in experiments 1A and B: Participants wrote their answers and confidence ratings---on the same scale as in the previous experiments---on a grid on the first page of the test. Participants completed the tests in groups of up to 25 students in a classroom supervised by a teacher, and had 45 minutes for each test.
+The students completed three pen-and-paper tests, separated by eight days of in-class instruction, as part of an after-school mathematics tutorial. Each test consisted of 20 four-alternative multiple-choice problems from the same pool of problems as in Experiments 1A and B. Multiple problems were printed on each page of the test, but otherwise the test procedure was the same as in Experiments 1A and B: Participants wrote their answers and confidence ratings---on the same scale as in the previous experiments---on a grid on the first page of the test. Participants completed the tests in groups of up to 25 students in a classroom supervised by a teacher, and had 45 minutes for each test.
 
 ## Experiment 1D: Method
 
@@ -153,9 +155,9 @@ Experiment 1D was similar to previous experiments, but the tests were completed 
 
 In Experiment 1C, the participants had completed three pen-and-paper tests, separated by eight weeks of instruction. During those eight weeks, the participants engaged in eight computerized mathematics tutorials, once per week. Although the same students participated, the procedure was different to Experiment 1C and we therefore described it as Experiment 1D.
 
-The participants used a website to view four-alternative multiple-choice mathematics problems. After logging on to the website, participants were presented one test problem at a time, such that the problem was shown on top of the screen, and the answer options below it. Participants clicked a small button next to their preferred response option, and then a "Submit" button to proceed to the next screen. There, they were prompted to rate their confidence in the accuracy of the preceding answer on a visual analog scale using the computer mouse. At the top of this screen the text "Sure correct or just guessing" was displayed, and a visual analog scale with endpoints labelled with "0%" on the left and "100%" was displayed below the text. In addition to the endpoints, the word "guessing" was displayed just below ¼ of the scale (without a tick mark), and "completely certain" just below the right endpoint. The word "CONFIDENCE" was printed below the scale and labels. Participants clicked on the scale to indicate their confidence, and then a "Submit" button to proceed to the next screen. After each confidence rating, participants could choose to receive feedback and/or watch instructional videos related to the problem, but those were unrelated to the current manuscript. Then, they moved on to the next problem.
+The participants used a website to view four-alternative multiple-choice mathematics problems. After logging on to the website, participants were presented one test problem at a time, such that the problem was shown on top of the screen, and the answer options below it. Participants clicked a small button next to their preferred response option, and then a "Submit" button to proceed to the next screen. There, they were prompted to rate their confidence in the accuracy of the preceding answer on a visual analog scale using the computer mouse. At the top of this screen the text "Sure correct or just guessing" was displayed. Below the text, a visual analog scale was displayed with endpoints labelled with "0%" on the left and "100%" on the right. In addition to the endpoints, the word "guessing" was displayed just below ¼ of the scale (without a tick mark), and "completely certain" just below the right endpoint. The word "CONFIDENCE" was printed below the scale and labels. Participants clicked on the scale to indicate their confidence, and then a "Submit" button to proceed to the next screen. After each confidence rating, participants could choose to receive feedback and/or watch instructional videos related to the problem, but those were unrelated to the current manuscript. Then, they moved on to the next problem.
 
-In each tutorial session, the participants completed ten mathematics problems or made four errors, whichever occurred first. (They had the opportunity to redo problems which they had answered incorrectly, but those data are excluded from the current analyses.) The tests were completed on a website, and each participant completed the tests on an individual computer in a class of up to 25 students, under teacher supervision. 80 unique problems were included from the same pool as in the previous Experiments.
+In each tutorial session, the participants completed ten mathematics problems or made four errors, whichever occurred first. (They had the opportunity to redo problems which they had answered incorrectly, but those data are excluded from the current analyses.) The tests were completed on a website, and each participant completed the tests on an individual computer in a class of up to 25 students, under teacher supervision. Eighty unique problems were included from the same pool as in the previous Experiments.
 
 ## Experiment 1E: Method
 
@@ -218,7 +220,7 @@ rm(math_metrics_5, math_metrics_vas, math_metrics_vas_nc, math_metrics_5_nc)
 
 Mathematics performance was quantified as proportion correct. We quantified metacognitive resolution with two common measures. First, we used the nonparametric gamma correlation [@GonzalezMeasuringordinalassociation1996; @GoodmanMeasuresAssociationCross1954; @Nelsoncomparisoncurrentmeasures1984]. It was recently shown that the traditional method of calculating gamma based on concordant and discordant pairs is a worse estimator of participants' true underlying gammas than a ROC based estimator [@HighamNewimprovedgamma2018]. We therefore focused on the latter as an estimate of participants' gamma correlations. Specifically, gamma was calculated as 2A*z*-1, where A*z* is the area under the ROC curve. However, for completeness, we also calculated gammas using the concordant-discordant pairs formula.
 
-Second, we used the signal detection theoretic measure *d*~a~ [@benjamin2008measurement; @MassonSourcesbiasGoodman2009], which measures the separation between two gaussian latent variables weighted by the ratio of their standard deviations. We calculated *d*~a~ with a linear regression of the zROC, as detailed by @benjamin2008measurement. However, that method ignores error on the x-axis [@HighamNoSpecialsignal2007; @KnoblauchModelingPsychophysicalData2012], and we therefore verified these results using more robust ordinal regression methods [@BurknerOrdinalRegressionModels2019]. The results were practically identical, so we focus on the former method's results because it is more common in the existing literature. In calculating the ROC based metrics, we added 1/K (K = number of confidence categories) to all rates to account for cells with zero observations [e.g. @HautusCorrectionsextremeproportions1995]. We also did the analyses without adjusting for empty cells. That led to many participants being dropped due to indeterminate measures, but otherwise the results were practically identical. For experiments 1D and 1F, where an analogue scale was used, an ordered scale with 6 categories was created. 
+Second, we used the signal detection theoretic measure *d*~a~ [@benjamin2008measurement; @MassonSourcesbiasGoodman2009], which measures the separation between two gaussian latent variables weighted by the ratio of their standard deviations. We calculated *d*~a~ with a linear regression of the zROC, as detailed by @benjamin2008measurement. However, that method ignores error on the x-axis [@HighamNoSpecialsignal2007; @KnoblauchModelingPsychophysicalData2012], and we therefore verified these results using more robust ordinal regression methods [@BurknerOrdinalRegressionModels2019]. The results were practically identical, so we focus on the former method's results because it is more common in the existing literature. In calculating the ROC based metrics, we added 1/K (K = number of confidence categories) to all rates to account for cells with zero observations [e.g. @HautusCorrectionsextremeproportions1995]. We also did the analyses without adjusting for empty cells. That led to many participants being dropped due to indeterminate measures, but otherwise the results were practically identical. For Experiments 1D and 1F, where an analogue scale was used, an ordered scale with 6 categories was created. 
 
 Most importantly, these metrics measure the within-subject, trial-by-trial association between confidence and accuracy---metacognitive resolution. Data analyses were conducted in the R statistical computing environment [@RCoreTeamLanguageEnvironmentStatistical2019], and are available at <https://osf.io/np3cu/>.
 
@@ -241,7 +243,11 @@ tab <- math_metrics %>%
   select(Experiment, N, Metric, result) %>%
   spread(Metric, result) %>%
   select(Experiment, N, `Proportion Correct`, everything())
-kable(tab, caption = "Measures of mathematics performance and resolution in Experiment 1. Numbers indicate means with 95\\% CIs in square brackets.")
+kable(
+  tab, 
+  booktabs = TRUE,
+  caption = "Measures of mathematics performance and resolution in Experiment 1. Numbers indicate means with 95\\% CIs in square brackets."
+  )
 ```
 
 <br>
@@ -250,7 +256,7 @@ kable(tab, caption = "Measures of mathematics performance and resolution in Expe
 
 We then turned to our main question, which concerned the between-subject correlation between mathematics performance and metacognitive resolution. Scatterplots of participants' proportions correct and resolution metrics are shown in Figure \@ref(fig:math-rfig). Across experiments, there appeared to be a positive relation between mathematics performance and metacognitive resolution. 
 
-```{r math-rfig, fig.cap = "Scatterplot of participants resolution metrics and mathematics proportions correct in Experiments 1A-F. Line of best fit and 95\\% CI are from an ordinary linear regression model."}
+```{r math-rfig, fig.cap = "Scatterplot of participants resolution metrics and mathematics proportions correct in Experiments 1A-F. Line of best fit and 95\\%CI are from an ordinary linear regression model."}
 math_metrics %>%
   group_by(Experiment) %>% 
   gather(key, value, zroc_auc_gamma, zroc_da, gamma_old) %>%
@@ -301,6 +307,7 @@ tab <- math_metrics %>%
   pivot_wider(names_from = c(Metric), values_from = result)
 kable(
   tab, 
+  booktabs = TRUE,
   caption = "Correlation between mathematics performance and three metrics of metacognitive resolution in Experiment 1."
 )
 ```
@@ -405,7 +412,7 @@ sims_long <- left_join(sims_long, new_names)
 
 The main results of the simulation are shown in Figure \@ref(fig:sim-rfig), which shows the relation between knowledge (K) and gamma / *d*~a~. (We omitted the zROC based gamma because the result was practically identical to *d*~a~). This relation is shown for different levels of actual resolution (R, colors) and guessing (G, columns). In the left column, we verified Nelson's 'Property 3' of measures of resolution for both gamma and *d*~a~ (see Nelson, 1984, Figure 1): The mean estimates were perfectly related to the generative resolution parameter and unrelated to knowledge when there was no guessing.
 
-```{r sim-rfig, fig.cap = "Results of the simulation study at various levels of resolution (color), knowledge (*x*-axis), and guessing (columns), for *d*~a~ and gamma (rows)."}
+```{r sim-rfig, fig.cap = "Results of the simulation study at various levels of resolution (color), knowledge, and guessing, for da and gamma."}
 sims_long %>% 
   # filter(d_gen %in% delta_bins[seq(1, length(delta_bins), 2)]) %>%
   rename(Guessing = p_guess) %>% 
@@ -525,19 +532,52 @@ tmp <- left_join(tmp1, tmp2) %>%
 res <- papaja::apa_print.htest(t.test(tmp$diff))$statistic
 ```
 
-Finally, we asked whether the participants' resolution was different from perfect if guessing was accounted for. We tested participants' *d*~a~s against the estimates from the simulation with Guessing = 0.25 and Resolution as the greatest value used in our simulations (2.5), at the level of the participants' performance, with a paired *t*-test. The simulated mean estimates of *d*~a~ from near-perfect resolution and Guessing = 0.25 were greater than the participants' observed *d*~a~s (`r res`): Participants did not have perfect metacognitive resolution. Further, better performing participants were further below near-perfect resolution than were poorer performing participants. Using gamma as the resolution metric yielded identical results.
+We then asked whether resolution in Experiments 1A-F was different from perfect if guessing was accounted for. We tested participants' *d*~a~s against the estimates from the simulation with Guessing = 0.25 and Resolution as the greatest value used in our simulations (2.5), at the level of the participants' performance, with a paired *t*-test. The simulated mean estimates of *d*~a~ from near-perfect resolution and Guessing = 0.25 were greater than the participants' observed *d*~a~s (`r res`): Participants did not have perfect metacognitive resolution. Further, better performing participants were further below near-perfect resolution than were poorer performing participants. Using gamma as the resolution metric yielded identical results.
 
-### A note about calibration
+In summary, our simulation study suggested that in studies of metacognition using multiple-choice testing, metrics of resolution will necessarily correlate with primary task performance. However, we assumed a generative model of confidence that relied on random guessing in the primary task. One concern with this model is that such random guessing, while intuitively appealing, may not be empirically plausible [e.g. @HighamNoSpecialsignal2007]. In fact, one study using SAT (five alternative multiple-choice) materials found that a signal detection theoretic (SDT) model described performance better than did a high-threshold model (i.e. model with random guessing; @HighamNoSpecialsignal2007). Specifically, high-threshold theory (as implied in our simulations) predicts that accuracy at the lowest level of confidence should not drop below 1/K (K = number of response alternatives). In contrast, as found in that study and predicted by SDT, accuracy was below 20% for low confidence responses, thus discrediting the random guessing assumption [@HighamNoSpecialsignal2007]. 
 
-Guesses may also impact measures of calibration, a different measure of metacognitive accuracy [@DunloskyMetacognition2009; @Lichtensteinthosewhoknow1977]. Because guesses artificially inflate measures of performance, a perfectly calibrated person's mean judgment---which aligns with their level of knowledge, not observed performance when some answers are guesses---will be lower than their inflated performance measure: Guessing will bias measures of calibration towards *under*confidence, such that the lowest-performing individuals will have the strongest guessing-induced underconfidence bias. One way to address this bias might be to estimate participants' knowledge using e.g. Abbott's formula (see above) instead of a simple proportion correct. As an extreme example, consider a participant in a 4AFC task who performs at chance (i.e. does not know the answer to any of the items) and accurately gives an average confidence judgment of 0%. Due to correct guessing, her observed percentage correct is 25%, leading to an observed underconfidence of 25%. However, a participant who truly knows the answer to all items, and knows that she knows (gives an average confidence rating of 100%), will not be impacted by correct guesses and thus will not show an underconfidence effect.
+```{r accuracy-at-confidence, eval = TRUE}
+tmp <- bind_rows(
+  math %>% 
+    filter(Experiment %in% c("1A", "1B", "1C")) %>% 
+    group_by(Experiment, subject) %>% 
+    mutate(con = bin_ratings(con, 1, 6, 6)) %>% 
+    group_by(Experiment, subject, con) %>% 
+    summarise(p = mean(accuracy)),
+  math %>% 
+    filter(Experiment %in% c("1D", "1F")) %>% 
+    group_by(Experiment, subject) %>% 
+    mutate(con = bin_ratings(con, 0, 1, 6)) %>% 
+    group_by(Experiment, subject, con) %>% 
+    summarise(p = mean(accuracy)),
+  math %>% 
+    filter(Experiment %in% c("1E")) %>% 
+    group_by(Experiment, subject) %>% 
+    mutate(con = bin_ratings(con, 0, 10, 6)) %>% 
+    group_by(Experiment, subject, con) %>% 
+    summarise(p = mean(accuracy))
+) %>% 
+  left_join(select(math_metrics, Experiment, subject, proportion_correct)) %>% 
+  ungroup() %>% 
+  mutate(Performance = cut2(proportion_correct, g = 3))
+res <- tmp %>% 
+  filter(con==1) %>% 
+  group_by(Performance) %>% 
+  group_modify(~tidy(t.test(.$p, mu = 0.25))) %>% 
+  glue_data("{round(estimate*100, 1)}%, 95%CI = [{round(conf.low*100, 1)}, {round(conf.high*100, 1)}]")
 
-The guessing-induced underconfidence bias in calibration brings to mind a well-known mismatch between self-evaluations and skill: The Dunning-Kruger effect describes a phenomenon whereby, across a wide variety of tasks and contexts, individuals with poor task performance are prone to overestimating their skill [@KrugerUnskilledUnawareIt1999]. The reasons underlying the Dunning-Kruger effect are still debated, and some researchers have suggested that statistical artefacts and scale effects may partly explain the tendency of poorer performers to have inflated self-assessments [@FeldEstimatingrelationshipskill2017; @KrajcAreunskilledreally2008; @McIntoshWiseClarifyingrole2019]. However, when possible, guesses will lead to a bias in the opposite direction of the Dunning-Kruger effect. In studies on calibration and related phenomena, such as the Dunning-Kruger effect, researchers should be aware of the potentially biasing impact of lucky guesses on measures of calibration.
+# tmp %>%   
+#   ggplot(aes(con, p, col = Performance)) +
+#   scale_y_continuous(
+#     "Proportion correct",
+#     limits = 0:1
+#   ) +
+#   labs(x = "Confidence") +
+#   stat_summary(geom = "line", aes(group=Performance)) +
+#   stat_summary()
+```
 
-## Summary of simulation study
-
-In summary, our simulation study suggested a general and important source of variation in resolution metrics in studies of metacognition using multiple-choice testing: The more opportunities there are for correct guesses---either due to number of response alternatives or to knowledge on the primary task---the more will measures of resolution be biased toward being too small. However, in order to examine this bias, we assumed a generative model of confidence ratings that relied on random guessing in the primary task. One concern with this model was that such random guessing, while intuitively appealing, may not be empirically plausible [e.g. @HighamNoSpecialsignal2007].
-
-Therefore, we put the idea that resolution metrics are related to domain knowledge in multiple-choice tasks, possibly due to guessing, to an experimental test. In Experiment 2, we directly compared indices of metacognitive resolution, and their relation to domain skill, between free-response trials and multiple-choice trials. 
+To begin to address this issue, we took the data of Experiments 1A-F, and asked if performance did indeed drop below 25% at the lowest level of confidence. We did this analysis separately for performance tertiles of participants, because good performing students should necessarily guess less than poor performers. In support of the guessing hypothesis, none of the performance tertiles had performance below 25% at the lowest level of confidence (Low performers: `r res[1]`, medium performers: `r res[2]`, high performers: `r res[3]`). In fact, as can be seen, the lowest performers were almost exactly at 25% at the lowest level of confidence. Nevertheless, these analyses were preliminary, and a stronger test of our hypothesis would be to experimentally contrast tasks where guessing was possible and where it was not. Therefore, we put the idea that resolution metrics are related to domain knowledge in multiple-choice tasks, possibly due to guessing, to an experimental test. In Experiment 2, we directly compared indices of metacognitive resolution, and their relation to domain skill, between free-response trials and multiple-choice trials. 
 
 # Experiment 2
 
@@ -613,11 +653,11 @@ tfl <- sum(tp$`First Language`=="English", na.rm = T)
 tmtt <- round(median(tp$time_taken/60), 0)
 ```
 
-We recruited 100 participants through the Prolific (https://prolific.ac) online platform. `r tsex` participants were female, and age ranged from `r tage[1]` to `r tage[2]` years. We recruited participants currently residing in the US, and `r tfl` reported English as their first language. Participants were paid $3.64 for participating. All participants provided informed consent. The sample size was determined with a power simulation based on the results of the simulation study described above.
+We recruited 100 participants through the Prolific (https://prolific.co) online platform. `r tsex` participants were female, and age ranged from `r tage[1]` to `r tage[2]` years. We recruited participants currently residing in the US, and `r tfl` reported English as their first language. All participants provided informed consent, and were paid $3.64. We determined the sample size with a power simulation based on the results of the simulation study described above, such that we would achieve 90% power for detecting a difference in the resolution-performance correlations between 2AFC and free response conditions.
 
 ### Materials
 
-We collected general knowledge questions from @TauberGeneralknowledgenorms2013 and from previous experiments conducted in our laboratory. Based on those previous studies, we selected 120 questions of varying degrees of difficulty, and found the most frequently endorsed commission errors to be used as the false response options in the 2AFC condition. We also screened the questions (and response alternatives) for potentially offensive or outdated material, and replaced unsuitable false response options with new ones. As an example, one question was "What was the name of the clown on the 'howdy doody' television show?". (Correct response: "Clarabell", incorrect alternative: "Bozo").
+We collected general knowledge questions from @TauberGeneralknowledgenorms2013 and from previous experiments conducted in our laboratory. Based on those previous studies, we selected 120 questions of varying degrees of difficulty, and found the most frequently endorsed commission errors to be used as the false response options in the 2AFC condition. We also screened the questions (and response alternatives) for potentially offensive or outdated material, and replaced unsuitable false response options with new ones. As an example, one question was "What college or university, founded in 1636, is the oldest in the united states?". (Correct response: "Harvard", incorrect alternative: "Columbia").
 
 ```{r trivia-exq, eval = FALSE}
 set.seed(8)
@@ -659,7 +699,7 @@ trivia_metrics_noconstant <- trivia %>%
   ungroup()
 ```
 
-As in Experiment 1, metacognitive resolution was quantified with *d*~a~, the ROC based gamma, and the concordant-discordant pairs gamma [@benjamin2008measurement; @HighamNewimprovedgamma2018; @Nelsoncomparisoncurrentmeasures1984]. These measures, proportions correct, and mean confidence ratings are summarised in Table \@ref(tab:trivia-dtab). First, this table shows that both proportion correct and mean confidence were significantly greater in the 2AFC condition. More importantly, all three resolution metrics were greater in the free response condition. This dramatic difference is surprising insofar as participants' knowledge across the two conditions was presumably equal. These results supported hypothesis i: Resolution measures were lower in the 2AFC task.
+As in Experiment 1, metacognitive resolution was quantified with *d*~a~, the ROC based gamma, and the concordant-discordant pairs gamma [@benjamin2008measurement; @HighamNewimprovedgamma2018; @Nelsoncomparisoncurrentmeasures1984]. These measures, proportions correct, and mean confidence ratings are summarised in Table \@ref(tab:trivia-dtab). First, proportion correct and mean confidence were significantly greater in the 2AFC condition. More importantly, all three resolution metrics were greater in the free response condition. This dramatic difference is surprising insofar as participants' knowledge across the two conditions was presumably equal. These results supported hypothesis i: Resolution measures were lower in the 2AFC task.
 
 ```{r trivia-dtab}
 tmp1 <- trivia_metrics %>% 
@@ -684,7 +724,6 @@ tmp1 <- trivia_metrics %>%
   spread(Metric, result) %>% 
   add_column(condition = "2AFC - Free", .before = 1)
 tmp2 <- trivia_metrics %>%
-  # left_join(tmp_mc) %>% 
   gather(
     key, 
     value, 
@@ -694,43 +733,22 @@ tmp2 <- trivia_metrics %>%
   group_modify(~ data.frame(t(smean.cl.boot(.x$value, B = 1000)))) %>%
   ungroup() %>%
   left_join(new_names) %>%
-  # mutate(Experiment = factor(exp)) %>%
   mutate_at(vars(Mean, Lower, Upper), ~ format(round(., 2), nsmall = 2)) %>%
   mutate(result = glue("{Mean} [{Lower}, {Upper}]")) %>%
   select(condition, Metric, result) %>%
   spread(Metric, result) %>%
   select(condition, `Proportion Correct`, `Mean confidence`, everything())
-# ft <- flextable(tab)
-# ft <- set_caption(tab, "Table 1. Descriptives of Study 1.")
-# ft
 bind_rows(tmp2, tmp1) %>% 
-  kable(caption = "Measures of general information test performance and metacognition in Experiment 2. Numbers indicate means with 95\\% CIs in square brackets.")
+  kable(
+    booktabs = TRUE,
+    caption = "Measures of general information test performance and metacognition in Experiment 2. Numbers indicate means with 95\\% CIs in square brackets."
+  ) %>% 
+  kable_styling(latex_options = "scale_down")
 ```
 
-We then turned to the second part of our hypothesis; that resolution would be spuriously correlated to performance in a 2AFC task. To answer, we correlated the three resolution metrics to performance, separately in the two conditions, again using the nonparametric tau correlation. The correlation was significant for each of the three resolution metrics in the 2AFC condition. However, it was much smaller in the free response condition, where it was only significant for the concordant-discordant pairs based gamma. These scatterplots are shown in Figure \@ref(fig:trivia-rfig). 
+We then turned to the second part of our hypothesis; that resolution would be spuriously correlated to performance in a 2AFC task. We correlated the three resolution metrics to performance in each conditions, using the nonparametric tau correlation. The correlation was significant for all three resolution metrics in the 2AFC condition (Table \@ref(tab:trivia-ctab)). However, it was much smaller in the free response condition, where it was only significant for the concordant-discordant pairs based gamma (Figure \@ref(fig:trivia-rfig)). 
 
-```{r trivia-ctab}
-tmp <- trivia_metrics %>%
-  gather(key, value, gamma_old, zroc_da, zroc_auc_gamma) %>%
-  left_join(new_names) %>%
-  group_by(condition, Metric)
-tab <- group_modify(
-  tmp,
-  ~tidy(cor.test(.x$value, .x$proportion_correct, method = "kendall"))
-) %>%
-  mutate(p.value = pvalue(p.value)) %>%
-  mutate(result = format(round(estimate, 2), nsmall = 2, trim = TRUE)) %>%
-  mutate(result = glue("{result} ({p.value})")) %>%
-  select(condition, Metric, result) %>%
-  ungroup() %>%
-  pivot_wider(names_from = c(Metric), values_from = result)
-kable(
-  tab, 
-  caption = "Correlation between general information test performance and three metrics of metacognitive resolution in Experiment 2."
-  )
-```
-
-```{r trivia-rfig, fig.cap = "Scatterplot of participants' resolution metrics and proportions correct across the two conditions in Experiment 2. Lines of best fit and 95\\% CIs are from an ordinary linear regression model.", fig.height = 3}
+```{r trivia-rfig, fig.cap = "Scatterplot of participants' resolution metrics and proportions correct across the two conditions in Experiment 2. Lines of best fit and 95\\% CIs are from an ordinary linear regression model."}
 trivia_metrics %>%
   gather(key, value, zroc_auc_gamma, zroc_da, gamma_old) %>%
   left_join(new_names) %>% 
@@ -744,10 +762,10 @@ trivia_metrics %>%
     "Proportion correct",
     breaks = pretty_breaks()
   ) +
-  geom_point(shape = 21, alpha = .5, size = .75) +
-  geom_smooth(method = "lm", col = "black", size = .4) +
+  geom_point(shape = 21, alpha = .5, size = 1) +
+  geom_smooth(method = "lm", col = "black", size = .7) +
   facet_grid(Metric ~ condition, scales = "free_y") +
-  theme(aspect.ratio = 1)
+  theme(aspect.ratio = .7)
 ```
 
 ```{r trivia-regression}
@@ -773,17 +791,46 @@ fit_da_res <- reg_to_res(zroc_da)
 fit_zg_res <- reg_to_res(zroc_auc_gamma)
 ```
 
+```{r trivia-ctab}
+tmp <- trivia_metrics %>%
+  gather(key, value, gamma_old, zroc_da, zroc_auc_gamma) %>%
+  left_join(new_names) %>%
+  group_by(condition, Metric)
+tab <- group_modify(
+  tmp,
+  ~tidy(cor.test(.x$value, .x$proportion_correct, method = "kendall"))
+) %>%
+  mutate(p.value = pvalue(p.value)) %>%
+  mutate(result = format(round(estimate, 2), nsmall = 2, trim = TRUE)) %>%
+  mutate(result = glue("{result} ({p.value})")) %>%
+  select(condition, Metric, result) %>%
+  ungroup() %>%
+  pivot_wider(names_from = c(Metric), values_from = result)
+kable(
+  tab, 
+  booktabs = TRUE,
+  caption = "Correlation between general information test performance and three metrics of metacognitive resolution in Experiment 2."
+  )
+```
+
+
 To quantify whether the correlations were significantly different between the two conditions, we fit a mixed effects regression model separately for each resolution metric. The model predicted resolution from performance, condition, and their interaction. Performance was used as a linear predictor, and condition was dummy coded with free response = 0, and 2AFC = 1. Thus, a significant positive interaction term would indicate a stronger correlation in the 2AFC condition. This prediction was supported in all three models (*d*~a~: `r fit_da_res[4]`; gamma (pairs): `r fit_go_res[4]`; gamma (ROC): `r fit_zg_res[4]`). 
 
 Together, the results from Experiment 2 supported our main hypotheses: i) resolution appears artificially smaller in 2AFC testing; and ii) resolution is confounded with performance in 2AFC testing. Additionally, using free response methodology, we found little support that performance and resolution are correlated above and beyond the confound illustrated by our simulations, at least in the general information domain. 
 
-# Conclusions
+# Discussion
 
 The applied implications of metacognitive accuracy are often discussed in the context of self-regulated learning [@FlavellMetacognitioncognitivemonitoring1979]: Knowing that you don't know, often construed as a low judgment of learning, feeling of knowing, or confidence rating, should prompt learners to further investigate the topic or question. Thus, learners who are metacognitively more sensitive to the accuracy of their answers should be able to better use this information to enhance study, leading to a hypothesized positive relationship between metacognitive resolution and domain skill. To accurately test this hypothesis, it is important that measures of the two abilities are not inherently related. In the current work, we showed that in multiple-choice testing, domain skill and metrics of metacognitive resolution are inherently related.
 
-In six multiple-choice mathematics testing experiments, we found a positive relation between mathematics performance and metacognitive resolution. Following @schwartz1994methodological, we suspected that an underlying reason for the correlation may be that some correct responses were lucky guesses, rather than truly known. We conducted simulations based on the assumption that the response alternative to unknown items is randomly guessed. This assumption leads to a strong correlation between resolution and domain skill, even when the two abilities are truly uncorrelated. However, the random guessing hypothesis implies a high threshold model of performance on the primary task, which has been shown to be a poorer fit to data than is signal detection theory [@HighamNoSpecialsignal2007]. However, signal detection theoretic analyses of multiple-choice tasks with more than two alternatives are rare, and researchers commonly use proportion correct as a measure of performance instead [see @DeCarlosignaldetectionapproach2012]. Therefore, we then experimentally verified that i) resolution metrics were smaller in 2AFC than in free-response testing, and that ii) there was a strong positive correlation between resolution metrics and performance in 2AFC, but not in free-response testing, as predicted by the guessing assumption.
+In six multiple-choice mathematics testing experiments, we found a positive relation between mathematics performance and metacognitive resolution. Following @schwartz1994methodological, we suspected that an underlying reason for the correlation may be that some correct responses were lucky guesses. We conducted simulations based on the assumption that the response alternative to unknown items is randomly guessed. This assumption leads to a strong correlation between resolution and domain skill, even when the two abilities are truly uncorrelated. However, the random guessing hypothesis implies a high threshold model of performance on the primary task, which has been shown to be a poorer fit to data than is signal detection theory [@HighamNoSpecialsignal2007]. However, signal detection theoretic analyses of multiple-choice tasks with more than two alternatives are rare, and researchers commonly use proportion correct as a measure of performance instead [see @DeCarlosignaldetectionapproach2012]. Therefore, we then experimentally verified that i) resolution metrics were smaller in 2AFC than in free-response testing, and that ii) there was a strong positive correlation between resolution metrics and performance in 2AFC, but not in free-response testing, as predicted by the guessing assumption.
 
-Related to the current work, @Maniscalcosignaldetectiontheoretic2012 suggested a measure of relative metacognitive accuracy that explicitly models the relation between primary task performance and metacognition. Based on an analysis showing that sensitivity and response bias in the primary task impact measures of metacognitive performance when studied in a signal detection task [@GalvinTypetaskstheory2003], this new measure has the attractive quality that it is measured in the same units as the primary task performance (i.e. *d'*). This metric, meta-*d'*, allows normalizing metacognitive performance with primary task perfomance, leading to a measure of metacognitive "efficiency" ($\frac{\text{meta-}d^\prime}{d^\prime}$), that is not inherently constrained by primary task performance or bias. While otherwise an attractive measure of metacognition, meta-*d'* requires that the primary task be conducted in a manner analogous to a signal detection task (e.g. 2AFC). Thus, it is not suitable as a measure of metacognition in free-response tasks, or, in its current implementation, multiple-choice tasks where the number of choice alternatives exceed 2. Nevertheless, the general implication of that approach is the same as elucidated by our results: In certain tasks, metrics of resolution are inherently related to performance on the primary task.
+Our results bear relevance to the finding that people oftentimes are "unskilled and unaware of it" (also known as the Dunning-Kruger effect, @KrugerUnskilledUnawareIt1999): People with poor performance are less aware of their lack of skill, compared to better performing individuals. The "unskilled and unaware" effect is typically examined in people's global self-assessments (e.g. predictions or retrodictions of overall performance in a task). As such, the Dunning-Kruger effect pertains to the accuracy of metacognitive calibration, a different measure of metacognitive accuracy than discussed in the present work [@DunloskyMetacognition2009; @Lichtensteinthosewhoknow1977] (i.e. poor-performing individuals are overconfident). Our results suggest that guessing, if not appropriately taken into account, might actually work against the Dunning-Kruger effect. As an extreme example, consider a participant in a 2AFC task who performs at chance and subsequently estimates her skill in the task at 0%. Given the random guessing assumption, her observed percentage correct is 50%, leading to an observed underconfidence of 50%. A participant who truly knows the answer to all items, and knows that she knows (gives an average confidence rating of 100%), will not be impacted by correct guesses and thus will not show an underconfidence effect. This issue, however, is easily corrected for by using 1/K (e.g. 25% in 4AFC) as the lowest limit of the confidence scale. Related to this line of reasoning, various statistical and scale-effect explanations for the Dunning-Kruger effect have been explored in the literature [@FeldEstimatingrelationshipskill2017; @KrajcAreunskilledreally2008; @McIntoshWiseClarifyingrole2019].
+
+More importantly, the "unskilled and unaware" idea applies equally well to the within-subject confidence-accuracy relationship (metacognitive resolution), as investigated in the current work. In those terms, "unskilled and unaware" implies that individuals with poorer performance would be metacognitively less sensitive to the accuracy of their own answers, on a trial-by-trial basis. When "awareness" in "unskilled and unaware" is conceptualized as metacognitive resolution, our results strongly imply that an "unskilled but unaware" effect will appear simply because performance and resolution metrics are inherently related in multiple-choice tasks. 
+
+More generally, the important implication of our results is that whenever a process-pure measurement of metacognitive resolution is desired---that is, one that is not inherently related to task performance---researchers would benefit from avoiding tasks that allow correct guessing (e.g. multiple-choice tasks). Ignoring this idea runs the risk of, for example, observing differences in metacognition between conditions, individuals, or groups because of differences in task performance rather than metacognition per se.
+
+Related to the current work, @Maniscalcosignaldetectiontheoretic2012 suggested a measure of relative metacognitive accuracy that explicitly models the relation between primary task performance and metacognition. Based on an analysis showing that sensitivity and response bias in the primary task impact measures of metacognitive performance when studied in a signal detection task [@GalvinTypetaskstheory2003], this new measure has the attractive quality that it is measured in the same units as the primary task performance (i.e. *d'*). This metric, meta-*d'*, allows normalizing metacognitive performance with primary task perfomance, leading to a measure of metacognitive "efficiency" ($\frac{\text{meta-}d^\prime}{d^\prime}$), which is not inherently constrained by primary task performance or bias. While otherwise an attractive measure of metacognition, meta-*d'* requires that the primary task be conducted in a manner analogous to a signal detection task (e.g. 2AFC). Thus, it is not suitable as a measure of metacognition in free-response tasks, or, in its current implementation, multiple-choice tasks where the number of choice alternatives exceed 2. Nevertheless, the general implication of that approach is the same as elucidated by our results: In certain tasks, metrics of resolution are inherently related to performance on the primary task.
 
 The results of our findings have important consequences to many studies of metacognition. It is sometimes said that the relationship between performance and resolution "seems obvious" [@schwartz1994methodological, p.110]. Perhaps so---although our results suggest otherwise---but because the two appear necessarily correlated if guesses are possible, studying this relationship may prove more difficult than previously thought [see also @FlemingHowmeasuremetacognition2014; @GalvinTypetaskstheory2003; @Maniscalcosignaldetectiontheoretic2012]. The handful of studies that have investigated the performance-resolution relationship have reported mixed results [@Griffineffectsdomainknowledge2009; @GriffinIndividualdifferencesrereading2008; @KellyMetacognitionemotionalface2011; @KellyRelationsMemoryMemory1976; @Thiedeimportancemonitoringselfregulation1999]. Our results highlighted one reason for observed positive correlations between the two, and therefore suggests caution in interpreting them, at least when the criterion test can involve guessing.
 
@@ -836,10 +883,10 @@ zrocs %>%
 ```{r trivia-rocs, eval = FALSE}
 rocs <- group_by(trivia, condition, session) %>% 
   mutate(rating = rating*10) %>% 
-  group_modify(~data.frame(sdt_roc(.$accuracy, .$rating, n_bins = 10, constant = 0)))
+  group_modify(~data.frame(sdt_roc(.$accuracy, .$rating, min=1,max=10, n_bins = 10, constant = 0)))
 zrocs <- group_by(trivia, condition, session) %>% 
   mutate(rating = rating*10) %>% 
-  group_modify(~data.frame(qnorm(sdt_roc(.$accuracy, .$rating, n_bins = 10, constant = 0))))
+  group_modify(~data.frame(qnorm(sdt_roc(.$accuracy, .$rating, min=1,max=10, n_bins = 10, constant = 0))))
 
 
 rocs %>% 
@@ -854,6 +901,17 @@ rocs %>%
   geom_line() +
   coord_equal() +
   facet_wrap("condition")
+trivia_metrics %>% 
+  filter(gamma_old > .33) %>% 
+  left_join(rocs) %>% 
+  ggplot(aes(X0, X1, group = session, col = zroc_auc)) +
+  scale_color_viridis_c("AUC") +
+  labs(x = "FAR", y = "HR") +
+  geom_abline() +
+  geom_point() +
+  geom_line() +
+  coord_equal() +
+  facet_wrap("session")
 
 zrocs %>% 
   filter(!(X0 %in% c(-Inf, Inf)), !(X1 %in% c(-Inf, Inf))) %>% 
@@ -870,6 +928,3 @@ zrocs %>%
   coord_equal() +
   facet_wrap("condition")
 ```
-
-
-
