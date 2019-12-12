@@ -1,7 +1,6 @@
 ---
 title: "On the relation between metacognitive monitoring and domain knowledge"
 shorttitle: "Metacognitive resolution and domain knowledge"
-
 author: 
   - name: "Matti Vuorre"
     affiliation: "1"
@@ -10,22 +9,18 @@ author:
     email: "vuorre@psych.columbia.edu"
   - name: "Janet Metcalfe"
     affiliation: "1"
-
 affiliation:
   - id: "1"
     institution: "Columbia University"
-
 authornote: |
   This research was supported, in part, by Institute of Education Science grant (R305A150467) awarded to JM. The authors are solely responsible for the content of this article. The data and code supporting this manuscript are available at https://osf.io/np3cu/.
-
 abstract: |
-  Metacognitive resolution refers to people's ability to tell their correct answers apart from incorrect answers, and is theorized an important factor in learning. Resolution---the trial-by-trial association between response accuracy and metacognitive endorsement of that response's accuracy---is a distinct ability from knowledge in the domain of testing, and instead indicates a higher-order self-evaluation. It is therefore important that measures of resolution are independent of domain knowledge. Six multiple-choice mathematics experiments revealed a robust positive correlation between resolution and performance. A simulation study suggested that correct guesses afforded by multiple-choice testing necessarily lead to a correlation between resolution and performance. Finally, an experiment supported this hypothesis: Resolution and performance were positively correlated in multiple-choice, but not in free-response testing. These results suggest that the "unskilled and unaware" effect, whereby poorly performing individuals appear unaware of their lack of ability, may be artifactual in multiple-choice tasks that define "awareness" as metacognitive resolution.
+  Are unskilled people less aware of their (lack of) skill than are their more skilled peers? The idea that unskilled people are also unaware (the "Dunning-Kruger effect") is supported by data from many domains, and has largely concerned people's predictions or retrodictions of their performance in a given task. However, we suggest that if "awareness" is operationalized differently, as relative metacognitive accuracy, the apparent correlation between skill and awareness may be artificially induced by common methods of multiple-choice testing. In the metacognitive research tradition, relative accuracy---the trial-by-trial association between response accuracy and metacognitive endorsement of that response's accuracy---is a more specific measure of awareness than is a one-shot retrodiction or prediction of performance; it directly answers the question "how well do you know that you (don't) know". 
+  We found a robust positive correlation between resolution and performance in six multiple-choice mathematics experiments, evidencing the "unskilled and unaware" phenomenon. However, when we directly compared multiple-choice to free-response testing in an otherwise identical task, we found that the correlation between skill and awareness disappeared in free-response testing. We then examined the hypothesis that guessing in a multiple choice test would directly lead to an illusory "unskilled and unaware" effect using monte carlo simulation. The results of that simulation strongly suggested that the correlation between skill and awareness observed in multiple choice testing is an artifact due to guessing, and not indicative of decreased awareness in less skilled individuals. We also discuss the implications of these findings to measurement of metacognitive accuracy.
   
 keywords: "metacognition, confidence, measurement, unskilled and unaware"
 wordcount: "`r wordcountaddin::word_count()`"
-
 bibliography: "references.bib"
-
 floatsintext: yes
 figurelist: no
 tablelist: no
@@ -33,14 +28,14 @@ footnotelist: no
 linenumbers: no
 mask: no
 draft: no
-
 documentclass: "apa6"
 classoption: "man"
+always_allow_html: true
 output: 
-  papaja::apa6_pdf:
-    keep_tex: false
   papaja::apa6_word:
     default 
+  papaja::apa6_pdf:
+    keep_tex: false
 ---
 
 ```{r setup, include = FALSE}
@@ -81,21 +76,25 @@ pvalue <- function(x) {
 
 # Introduction
 
-To successfully improve learning, it is important that people are able to monitor what they know and what they don't know [@BjorkMemoryMetamemoryConsiderations1994; @FlavellMetacognitioncognitivemonitoring1979; @MetcalfeMetacognitiveJudgmentsControl2009; @NelsonMetamemoryTheoreticalFramework1990; @NelsonUtilizationMetacognitiveJudgments1994]. This metacognitive monitoring and knowledge, when accurate, may be used to select appropriate items for further study or to seek assistance to improve comprehension. To paraphrase the oft-quoted adage: If you don't know what you don't know, you can't fix it. It is therefore of paramount importance that people be metacognitively accurate in all fields of study. 
+To successfully improve learning, it is important that people are able to monitor what they know and what they don't know [@BjorkMemoryMetamemoryConsiderations1994; @FlavellMetacognitioncognitivemonitoring1979; @MetcalfeMetacognitiveJudgmentsControl2009; @NelsonMetamemoryTheoreticalFramework1990; @NelsonUtilizationMetacognitiveJudgments1994]. This metacognitive monitoring and knowledge, when accurate, may be used to select appropriate items for further study, seek assistance to improve comprehension, or otherwise change behavior when external feedback is not available. To paraphrase the oft-quoted adage: If you don't know what you don't know, you can't fix it. It is therefore of paramount importance that people be metacognitively accurate.
 
-The relative accuracy, or *resolution*, of metacognitive judgments measures the extent to which people can discriminate whether they answered (or will answer) a particular question accurately, on an item-by-item basis. A strong positive relation between a participant's ratings about how sure they are that they are, or will be, correct on particular items and their actual correctness on those items indicates good resolution. Broadly, research has focused on two types of metacognitive ratings: Prospective ratings, such as judgments of learning (JOL), feelings of knowing (FOK) or ease of learning judgments (EOL), indicate how likely the participant thinks that a later retrieval or answer will be correct. Retrospective ratings indicate the participant's judgment of the accuracy of a just-provided answer, typically in the form of judgments of confidence. Although these judgments are distinct, for clarity we refer to all as judgments of confidence (in the accuracy of one's answer). Typically, the correspondence between confidence and accuracy is referred to as metacognitive resolution, relative accuracy [@DunloskyMetacognition2009], or sensitivity [@FlemingHowmeasuremetacognition2014].
+However, it has repeatedly been found, across a wide range of tasks, that people who are less skilled at a given task are also less aware of their performance in the task (the "unskilled and unaware effect", also known as the "Dunning-Kruger effect"; @KrugerUnskilledUnawareIt1999). For example, @KrugerUnskilledUnawareIt1999 (Study 3) had volunteers read sentences that missed parts. For each sentence, their task was to determine whether the sentence was grammatical or not, and if not, which of four different rewordings would make it grammatical. Afterwards, the participants estimated how many items they completed succesfully. The findings indicated a dramatic unskilled and unaware effect: The worst-performing participants grossly overestimated their test scores, whereas better performing participants were more accurate in their self-evaluations. It appears, then, that unskilled individuals may suffer from a metacognitive mismatch by which they tend to dramatically overestimate their skill, which potentially negative implications to learning, adjustment, and behavior.
 
-Another aspect of metacognitive accuracy, sometimes termed calibration, absolute accuracy, bias, or over/underconfidence, concerns the relationship between participants' average level of performance and average metacognitive judgment magnitude [@DunloskyMetacognition2009; @Lichtensteinthosewhoknow1977]. For example, it has been found that individuals with poorer performance in a task tend to overestimate their task abilities, a phenomenon known as the Dunning-Kruger effect [@KrugerUnskilledUnawareIt1999]. Although sometimes also called metacognitive accuracy, calibration is distinct from the topic of this manuscript, metacognitive resolution.
+This popular measure of self-evaluation by which participants predict or retrodict their performance in a task is typically called metacognitive calibration, absolute accuracy, bias, or over/underconfidence [@DunloskyMetacognition2009; @Lichtensteinthosewhoknow1977]. However, in the metacognitive research tradition, another, related but not identical, measure is typically used to measure metacognitive awareness. 
 
-A long line of research indicates the general accuracy and importance of relative metacognitive judgments [@Tauberbriefhistorymetamemory2016]. In the context of memory, resolution is often measured with prospective metacognitive judgments, such as JOLs, FOKs, or EOLs [@DunloskyMetacognition2009; @Finnrolememorytest2007; @HartMemoryfeelingofknowingexperience1965; @HartMemorymemorymonitoringprocess1967; @KoriatComparingobjectivesubjective2002; @KoriatMonitoringoneown1997; @Metcalfecuefamiliarityheuristicmetacognition1993; @MetcalfeEvidencethatjudgments2008; @NelsonUtilizationMetacognitiveJudgments1994; @NelsonWhenPeopleJudgments1991], or retrospective judgments of confidence in the correctness of a just-provided answer [@Butterfieldcorrectionerrorscommitted2006; @ButterfieldErrorscommittedhigh2001; @KelleyMemorymonitoringcontrol2003; @KelleyRememberingMistakenKnowing1993; @Koriatselfconsistencymodelsubjective2012; @KoriatSubjectiveconfidenceone2008]. Other areas where resolution has been studied include visual perception [@DesenderSubjectiveConfidencePredicts2018a; @FlemingRelatingIntrospectiveAccuracy2010; @KoriatSubjectiveconfidenceperceptual2011; @MoralesDomainGeneralDomainSpecificPatterns2018], comprehension [@GlenbergEnhancingcalibrationcomprehension1987; @GlenbergInexpertcalibrationcomprehension1987; @Griffineffectsdomainknowledge2009; @GriffinIndividualdifferencesrereading2008; @MakiMetacomprehensiontextmaterial1984; @ThiedeSummarizingcanimprove2003; @WileyImprovingmetacomprehensionaccuracy2016], problem solving [@BaarsEffectsProblemSolving2014; @BaarsEffectstrainingselfassessment2014], emotion recognition [@KellyMetacognitionemotionalface2011], and numerosity and mathematics [@OLearyCarvingMetacognitionIts2017; @SchrawEffectGeneralizedMetacognitive1996; @SieglerDevelopmentalindividualdifferences2013; @WallChildrencanaccurately2016]. Across these domains of study, the overall finding has been that metacognitive judgments are positively related to the accuracy of answers on the criterion task. With some surprisingly small effects (such as with comprehension monitoring) people appear to know what they (don't) know. 
+The relative accuracy, or *resolution*, of metacognitive judgments measures the extent to which people can discriminate whether they answered (or will answer) a particular question accurately, on an item-by-item basis. Arguable, it is a more suitable operationalization of "awareness" than is calibration, because it indicates an online, in-the-moment, evaluation of one's performance in a task. A strong positive relation between a participant's ratings about how sure they are that they are, or will be, correct on particular items and their actual correctness on those items indicates good resolution. Broadly, research has focused on two types of metacognitive ratings: Prospective ratings, such as judgments of learning (JOL), feelings of knowing (FOK) or ease of learning judgments (EOL), indicate how likely the participant thinks that a later retrieval or answer will be correct. Retrospective ratings indicate the participant's judgment of the accuracy of a just-provided answer, typically in the form of judgments of confidence. Although these judgments are distinct, for clarity we refer to all as judgments of confidence (in the accuracy of one's answer). Typically, the correspondence between confidence and accuracy is referred to as metacognitive resolution, relative accuracy [@DunloskyMetacognition2009], or sensitivity [@FlemingHowmeasuremetacognition2014].
 
-Metacognitive resolution is typically measured with metrics that are asserted to be independent of the participants' performance, skill, or knowledge in the primary task. For example, in a memory task, participants' memory abilities should not impact their metacognitive abilities, and vice versa. In an influential article @Nelsoncomparisoncurrentmeasures1984 recommended the Goodman-Kruskal gamma correlation [@GoodmanMeasuresAssociationCross1954] as a measure of resolution, partly because it is theoretically independent of task performance [see also @GonzalezMeasuringordinalassociation1996]. Other measures of resolution include Pearson's *r* [@NelsonNorms300generalinformation1980], the phi correlation [@KornellTransferMetacognitiveSkills2007], and signal detection theoretic measures [@benjamin2008measurement; @HighamNewimprovedgamma2018]. Although computationally different, these metrics measure the association between response accuracy and metacognitive rating in a way that is usually assumed to quantify metacognitive ability independent of task performance. However, it remains a possibility that metacognitive resolution is empirically related to task performance, with important implications to self-directed study.
+A long line of research indicates the general accuracy and importance of relative metacognitive judgments [@Tauberbriefhistorymetamemory2016]. In the context of memory, resolution is often measured with prospective metacognitive judgments, such as JOLs, FOKs, or EOLs [@DunloskyMetacognition2009; @Finnrolememorytest2007; @HartMemoryfeelingofknowingexperience1965; @HartMemorymemorymonitoringprocess1967; @KoriatComparingobjectivesubjective2002; @KoriatMonitoringoneown1997; @Metcalfecuefamiliarityheuristicmetacognition1993; @MetcalfeEvidencethatjudgments2008; @NelsonUtilizationMetacognitiveJudgments1994; @NelsonWhenPeopleJudgments1991], or retrospective judgments of confidence in the correctness of a just-provided answer [@Butterfieldcorrectionerrorscommitted2006; @ButterfieldErrorscommittedhigh2001; @KelleyMemorymonitoringcontrol2003; @KelleyRememberingMistakenKnowing1993; @Koriatselfconsistencymodelsubjective2012; @KoriatSubjectiveconfidenceone2008]. Other areas where resolution has been studied include visual perception [@DesenderSubjectiveConfidencePredicts2018a; @FlemingRelatingIntrospectiveAccuracy2010; @KoriatSubjectiveconfidenceperceptual2011; @MoralesDomainGeneralDomainSpecificPatterns2018], comprehension [@GlenbergEnhancingcalibrationcomprehension1987; @GlenbergInexpertcalibrationcomprehension1987; @Griffineffectsdomainknowledge2009; @GriffinIndividualdifferencesrereading2008; @MakiMetacomprehensiontextmaterial1984; @ThiedeSummarizingcanimprove2003; @WileyImprovingmetacomprehensionaccuracy2016], problem solving [@BaarsEffectsProblemSolving2014; @BaarsEffectstrainingselfassessment2014], emotion recognition [@KellyMetacognitionemotionalface2011], and numerosity and mathematics [@OLearyCarvingMetacognitionIts2017; @SchrawEffectGeneralizedMetacognitive1996; @SieglerDevelopmentalindividualdifferences2013; @WallChildrencanaccurately2016]. Across these domains of study, the overall finding has been that metacognitive judgments are positively related to the accuracy of answers on the criterion task. With some surprisingly small effects (such as with comprehension monitoring) people appear to know what they (don't) know.
+
+Importantly, the unskilled and unaware phenomenon is typically studied using calibration as a measure of awareness.  However, that metric is known to suffer from various drawbacks that can lead to artificial correlations between skill and awareness [@FeldEstimatingrelationshipskill2017; @KrajcAreunskilledreally2008; @McIntoshWiseClarifyingrole2019]. A continuing debate has concerned the extent to which observed unskilled and unaware effects are due to properties of the measurement or reflect actual relations between skill and awareness. It is recognized that both play a role in the observed unskilled and unaware effects.
+
+However, metacognitive resolution is typically measured with metrics that are asserted to be independent of the participants' performance, skill, or knowledge in the primary task. In an influential article @Nelsoncomparisoncurrentmeasures1984 recommended the Goodman-Kruskal gamma correlation [@GoodmanMeasuresAssociationCross1954] as a measure of resolution, partly because it is theoretically independent of task performance [see also @GonzalezMeasuringordinalassociation1996]. Other measures of resolution include Pearson's *r* [@NelsonNorms300generalinformation1980], the phi correlation [@KornellTransferMetacognitiveSkills2007], and signal detection theoretic measures [@benjamin2008measurement; @HighamNewimprovedgamma2018]. Although computationally different, these metrics measure the trial-by-trial association between response accuracy and metacognitive rating in a way that is usually assumed to quantify metacognitive ability independent of task performance. However, it remains a possibility that metacognitive resolution is empirically related to task performance in a way that would show the unskilled and unaware effect over and beyond its effects on calibration. Such a finding would have dramatic consequences to many areas where metacognitive skills are important, including self-directed studying, to which we turn next.
 
 ## Relation between metacognitive resolution and task performance
 
 Insofar as knowledge of what the individual knows and doesn't know has consequences for optimal learning strategies, people with poorer knowledge of their own misconceptions may have a particularly difficult time in remedying those misunderstandings. They presumably won't know when to seek help, or when more study is indicated, if they don't know that they don't know particular concepts. If metacognitions are used to guide learning, there should be a positive relation between peoples' metacognitive resolution and performance in the task in which their metacognitions were evaluated.
 
-How important is metacognitive monitoring---resolution---to learning success? One review of 47 experiments found that not only do learners allocate more time to more difficult items, learners' metacognitive judgments negatively predict the amount of time they allocate for studying that item [@SonMetacognitivecontrolstrategies2000]. These results suggest that people are aware of how well they know and use this metacognitive knowledge to guide learning, leading to the hypothesis that students with greater metacognitive resolution may be better learners: Resolution and task performance should be positively correlated across participants. If true, this finding would further support the proposal that metacognitive monitoring is used to control learning behavior, with a positive impact on learning success [@nelson1994investigate].
+How important is metacognitive monitoring---resolution---to learning success? One review of 47 experiments found that not only do learners allocate more time to more difficult items, learners' metacognitive judgments negatively predict the amount of time they allocate for studying that item [@SonMetacognitivecontrolstrategies2000]. These results suggest that people are aware of how well they know and use this metacognitive knowledge to guide learning, leading to the hypothesis that students with greater metacognitive resolution may be better learners: Resolution and task performance should be positively correlated across participants. If true, this finding would further support the proposal that metacognitive monitoring is used to control learning behavior, with a positive impact on learning success [@nelson1994investigate]. It would also suggest that unskilled individuals are, indeed, less aware than their more skilled peers.
 
 Prior research on the resolution-performance relationship presents a mixed picture, with results varying within and between domains and methods of study. For example, the memory loss associated with amnesia is not always associated with an inability to give accurate metamemory judgments, suggesting that domain skill (i.e. memory ability) and resolution are not necessarily correlated [@JanowskyMemorymetamemoryComparisons1989; @ShimamuraMemorymetamemorystudy1986]. Other null relations between domain skill and metacognitive monitoring have been reported in studies of children's memory strategies [@KellyRelationsMemoryMemory1976] emotion recognition [@KellyMetacognitionemotionalface2011] and text comprehension [@Griffineffectsdomainknowledge2009]. However, positive relations between domain skill and resolution have also been reported, namely in memory [@Thiedeimportancemonitoringselfregulation1999], emotion recognition (@KellyMetacognitionemotionalface2011; Experiment 2), and text comprehension [@GriffinIndividualdifferencesrereading2008].
 
@@ -113,21 +112,19 @@ Our approach to answer this question was three-fold. First, we investigated a la
 
 # Experiment 1 
 
-In what we call Experiment 1, we collated data from six experiments investigating mathematics learning. There were differences between experiments, such as testing medium (computer or paper) and age (middle school or undergraduate), but our focus here was not to investigate these factors' impact on mathematics performance or metacognition. Rather, we used this large dataset to examine the possible relationship between metacognitive resolution and (mathematics) performance, in a multiple-choice testing context. The common procedure was that participants completed mathematics tests consisting of 4-alternative multiple-choice problems, and rated their confidence in the accuracy of each of their answers.
+In Experiment 1, we collated data from six very similar experiments investigating mathematics learning. There were differences between experiments, such as testing medium (computer or paper) and age (middle school or undergraduate), but our focus here was not to investigate these factors' impact on mathematics performance or metacognition. Rather, we used this large dataset to examine the possible relationship between metacognitive resolution and (mathematics) performance, in a multiple-choice testing context. The common procedure was that participants completed mathematics tests consisting of 4-alternative multiple-choice problems, and rated their confidence in the accuracy of each of their answers.
 
-With respect to resolution in mathematics study, two previous studies which contained a resolution measure have reported conflicting results. @SieglerDevelopmentalindividualdifferences2013, in a study of middle school students' fraction arithmetic skills, reported that students' confidence ratings were on average 0.7 points greater for correct than incorrect answers on a 1-5 scale, suggesting that young learners of mathematics have reasonably accurate metacognitions about their answers' accuracy (though the difference in confidence is small). @SchrawEffectGeneralizedMetacognitive1996 tested university undergraduates on probability problems and had them rate their confidence in their answers. The correlation between confidence and accuracy in that study was not statistically significant (Pearson's *r* = -.03)[^1], indicating that university students' metacognitive resolution (within probability calculations) is not accurate. However, neither study addressed the potential correlation between resolution and mathematics performance, which we investigate here.
+With respect to resolution in mathematics study, two previous studies which contained a resolution measure have reported conflicting results. @SieglerDevelopmentalindividualdifferences2013, in a study of middle school students' fraction arithmetic skills, reported that students' confidence ratings were on average 0.7 points greater for correct than incorrect answers on a 1-5 scale, suggesting that young learners of mathematics have reasonably accurate metacognitions about their answers' accuracy (though the difference in confidence is small). @SchrawEffectGeneralizedMetacognitive1996 tested university undergraduates on probability problems and had them rate their confidence in their answers. The correlation between confidence and accuracy in that study was not statistically significant (Pearson's *r* = -.03)[^1], indicating that university students' metacognitive resolution (within probability calculations) is not accurate. However, neither study addressed the potential correlation between resolution and mathematics performance---the unskilled and unaware phenomenon---which we investigate here.
 
 [^1]: The description of how this correlation was calculated is not clear to us, but we take it that the coefficient reflects a cross-participant mean of within-participant Pearson correlations. @SchrawEffectGeneralizedMetacognitive1996 also reported a correlation in which the data for all participants was pooled, and this correlation was positive (*r* = .16) but not statistically significant.
 
 Because of the similarity of these experiments (1A-F), we describe all six experiments' methods first, and then present the results together.
 
-## Experiment 1A: Method
+## Method
 
-### Participants
+### Experiment 1A
 
 Ninety-two 8^th^ grade middle school students in a New York City public school participated. Parents and students provided voluntary consent. We did not query demographic information, but the school's demographic statistics were: 12% Asian, 23% Black, 37% Hispanic, 23% White. Students with special needs: 12%. 51% were male and 49% female. 53% were below the poverty line. The experiment was approved by the Columbia University Internal Review Board and by the New York City Board of Education.
-
-### Procedure
 
 Participants completed four tests administered on four separate days of an after-school mathematics tutorial program. There was a feedback session between each test in which a teacher provided in-class feedback on the previous test. Tests consisted of ten four-alternative multiple-choice problems, compiled from published New York State Regents Common Core tests[^2]. The specific Regents problems used in Experiment 1 are listed at https://osf.io/np3cu/, and an example problem is shown in Figure \@ref(fig:math-example). The problems were classified as either 'algebra' or 'functions' in the Regents exams, and each test contained problems from only one of these classifications. Half of the students' tests consisted of 'algebra' problems, and half did 'functions' problems. Thus, there were 80 unique problems, of which each student completed 40.
 
@@ -139,17 +136,17 @@ include_graphics("example-problem-14.8.13.png")
 
 Up to 25 students at a time completed the pencil and paper tests in a single classroom under teacher supervision. Participants could use calculators and scrap paper. Each page of the test presented a single problem, and four response options printed below the problem. On the front page of the test was a grid where students entered their preferred response alternative and confidence rating for each problem. Confidence was rated with integers from 0 ("I completely guessed") to 5 ("I am extremely confident that my answer is correct"). Students were instructed to rate their confidence immediately after completing each problem. However, although the teachers encouraged the students to enter their confidence ratings immediately following each problem, some students may have entered all their ratings in bulk after completing the whole test.
 
-## Experiment 1B: Method
+### Experiment 1B
 
 Experiment 1B was a direct replication of Experiment 1A. A new sample of ninety-two 8^th^ grade students from the same New York City public school participated. Voluntary consent was obtained from students and their parents. The experiment was approved by the Columbia University Internal Review Board and by the New York City Board of Education. The procedure was identical to Experiment 1A.
 
-## Experiment 1C: Method
+### Experiment 1C
 
 Experiment 1C was a close but not exact replication of Experiments 1A and B. Ninety-one 8^th^ grade students participated from the same New York City public school as in Experiments 1A and B. We obtained voluntary consent from the students and their parents. The experiment was approved by the Columbia University Internal Review Board and by the New York City Board of Education.
 
 The students completed three pen-and-paper tests, separated by eight days of in-class instruction, as part of an after-school mathematics tutorial. Each test consisted of 20 four-alternative multiple-choice problems from the same pool of problems as in Experiments 1A and B. Multiple problems were printed on each page of the test, but otherwise the test procedure was the same as in Experiments 1A and B: Participants wrote their answers and confidence ratings---on the same scale as in the previous experiments---on a grid on the first page of the test. Participants completed the tests in groups of up to 25 students in a classroom supervised by a teacher, and had 45 minutes for each test.
 
-## Experiment 1D: Method
+### Experiment 1D
 
 Experiment 1D was similar to previous experiments, but the tests were completed on a computer. Eighty-nine students participated. The participants were the same students as those in Experiment 1C (two students who completed Experiment 1C did not take part in Experiment 1D).
 
@@ -159,17 +156,17 @@ The participants used a website to view four-alternative multiple-choice mathema
 
 In each tutorial session, the participants completed ten mathematics problems or made four errors, whichever occurred first. (They had the opportunity to redo problems which they had answered incorrectly, but those data are excluded from the current analyses.) The tests were completed on a website, and each participant completed the tests on an individual computer in a class of up to 25 students, under teacher supervision. Eighty unique problems were included from the same pool as in the previous Experiments.
 
-## Experiment 1E: Method
+### Experiment 1E
 
 Eighty-six Columbia University undergraduate students participated for course credit in an introductory Psychology course (36 females, 37 males, the rest did not report gender; age: 18-36 years). The experiment was approved by the Columbia University Internal Review Board.
 
 The participants completed two tests, each consisting of 20 math problems. Each problem, and its response options, was printed on a separate page. Participants were asked to solve the problems and write their preferred response alternative and confidence rating on a separate answer sheet. Participants provided confidence ratings by writing a number from 0 ("low") to 10 ("high") next to their chosen response on the answer sheet. The two tests were separated by a computerized mathematics tutorial, which included videos about solving problems related to the ones on the tests, which we did not consider here. The problems were selected from the same pool of materials as in the previous experiments. Up to four individuals participated in the same room, under experimenter supervision. Participation took up to 90 minutes, and participants were allowed scrap paper and calculators.
 
-## Experiment 1F: Method
+### Experiment 1F
 
 Experiment 1F was similar to Experiment 1E, but the mathematics tests were computerized. Ninety-nine undergraduates participated for course credit. The experiment was approved by the Columbia University Internal Review Board.
 
-In this experiment, participants completed four mathematics tests as part of an online mathematics tutorial. Each test consisted of ten problems, presented alone on the top of the screen, with the answer alternatives below. Participants chose their preferred response by clicking a box next to it. They then clicked "Submit", and proceeded to the next screen, where they rated their confidence in the accuracy of their response by clicking on a visual analog scale. After indicating their degree of confidence, they clicked "Submit" to proceed to the next screen. The following screen allowed the participant to view different types of instructional videos related to the mathematics problems, but these are not analyzed in the current study. The tests were completed in one 90-minute session, on individual computers, in groups of up to four supervised by an experimenter.
+Participants completed four mathematics tests as part of an online mathematics tutorial. Each test consisted of ten problems, presented on the top of the screen, with the answer alternatives below. Participants chose their preferred response by clicking a box next to it. They then clicked "Submit", and proceeded to the next screen, where they rated their confidence in the accuracy of their response by clicking on a visual analog scale. After indicating their degree of confidence, they clicked "Submit" to proceed to the next screen. The following screen allowed the participant to view different types of instructional videos related to the mathematics problems, but these are not analyzed in the current study. The tests were completed in one 90-minute session, on individual computers, in groups of up to four supervised by an experimenter.
 
 ## Results
 
@@ -226,7 +223,7 @@ Most importantly, these metrics measure the within-subject, trial-by-trial assoc
 
 The mean gamma correlations and *d*~a~s for Experiments 1A-F are summarized in Table \@ref(tab:math-dtab). As can be seen mathematics performance was close to 70% correct across experiments. More importantly, metacognitive resolution was good and significantly better than chance in all six experiments. 
 
-```{r math-dtab}
+```{r math-dtab, results = 'asis'}
 new_names <- tibble(
   key = c("zroc_auc_gamma", "gamma_old", "zroc_da", "phi", "zroc_auc", "trap_auc", "proportion_correct", "mean_rating"),
   Metric = c("Gamma (ROC)", "Gamma (pairs)", "da", "Phi", "AUC (zROC)", "AUC (trap)", "Proportion Correct", "Mean confidence")
@@ -243,11 +240,10 @@ tab <- math_metrics %>%
   select(Experiment, N, Metric, result) %>%
   spread(Metric, result) %>%
   select(Experiment, N, `Proportion Correct`, everything())
-kable(
-  tab, 
-  booktabs = TRUE,
-  caption = "Measures of mathematics performance and resolution in Experiment 1. Numbers indicate means with 95\\% CIs in square brackets."
-  )
+apa_table(
+  tab,
+  "Measures of mathematics performance and resolution in Experiment 1. Numbers indicate means with 95\\% CIs in square brackets."
+)
 ```
 
 <br>
@@ -291,7 +287,7 @@ math_metrics %>%
 
 We then calculated Kendall's tau correlations between proportions correct and each of the three resolution metrics, separately for each experiment. We used the nonparametric tau correlation because the resolution metrics, especially gamma, do not have the metric properties assumed by a Pearson correlation [@benjamin2008measurement]. The nonparametric correlation also alleviated the biasing effects of the outlying -1 concordant-discordant pairs gammas, observed in Figure \@ref(fig:math-rfig). Additionally, as will be shown below, the relationship between performance and resolution is unlikely to be linear, further motivating the use of a nonparametric correlation measure. As can be seen in Table \@ref(tab:math-rtab), the correlation was positive and significant for every experiment for both ROC based metrics, and significant (or marginally so) for four out of six experiments for the concordant-discordant pairs gamma. These results strongly suggested that task performance and metacognitive resolution are positively related when multiple choice testing is used, at least in the mathematics domain.
 
-```{r math-rtab}
+```{r math-rtab, results = 'asis'}
 tab <- math_metrics %>%
   gather(key, value, zroc_da, zroc_auc_gamma, gamma_old) %>%
   left_join(new_names) %>%
@@ -305,9 +301,8 @@ tab <- math_metrics %>%
   select(Experiment, Metric, result) %>%
   ungroup() %>%
   pivot_wider(names_from = c(Metric), values_from = result)
-kable(
+apa_table(
   tab, 
-  booktabs = TRUE,
   caption = "Correlation between mathematics performance and three metrics of metacognitive resolution in Experiment 1."
 )
 ```
@@ -701,11 +696,11 @@ trivia_metrics_noconstant <- trivia %>%
 
 As in Experiment 1, metacognitive resolution was quantified with *d*~a~, the ROC based gamma, and the concordant-discordant pairs gamma [@benjamin2008measurement; @HighamNewimprovedgamma2018; @Nelsoncomparisoncurrentmeasures1984]. These measures, proportions correct, and mean confidence ratings are summarised in Table \@ref(tab:trivia-dtab). First, proportion correct and mean confidence were significantly greater in the 2AFC condition. More importantly, all three resolution metrics were greater in the free response condition. This dramatic difference is surprising insofar as participants' knowledge across the two conditions was presumably equal. These results supported hypothesis i: Resolution measures were lower in the 2AFC task.
 
-```{r trivia-dtab}
+```{r trivia-dtab, results = 'asis'}
 tmp1 <- trivia_metrics %>% 
   select(
     session, condition, proportion_correct, 
-    mean_rating, gamma_old, zroc_da, zroc_auc_gamma
+    mean_rating, zroc_da, zroc_auc_gamma
   ) %>% 
   gather(key, value, -session, -condition) %>% 
   spread(condition, value) %>% 
@@ -727,7 +722,7 @@ tmp2 <- trivia_metrics %>%
   gather(
     key, 
     value, 
-    proportion_correct, mean_rating, gamma_old, zroc_auc_gamma, zroc_da,
+    proportion_correct, mean_rating, zroc_auc_gamma, zroc_da,
   ) %>% 
   group_by(key, condition) %>%
   group_modify(~ data.frame(t(smean.cl.boot(.x$value, B = 1000)))) %>%
@@ -739,11 +734,9 @@ tmp2 <- trivia_metrics %>%
   spread(Metric, result) %>%
   select(condition, `Proportion Correct`, `Mean confidence`, everything())
 bind_rows(tmp2, tmp1) %>% 
-  kable(
-    booktabs = TRUE,
+  apa_table(
     caption = "Measures of general information test performance and metacognition in Experiment 2. Numbers indicate means with 95\\% CIs in square brackets."
-  ) %>% 
-  kable_styling(latex_options = "scale_down")
+  )
 ```
 
 We then turned to the second part of our hypothesis; that resolution would be spuriously correlated to performance in a 2AFC task. We correlated the three resolution metrics to performance in each conditions, using the nonparametric tau correlation. The correlation was significant for all three resolution metrics in the 2AFC condition (Table \@ref(tab:trivia-ctab)). However, it was much smaller in the free response condition, where it was only significant for the concordant-discordant pairs based gamma (Figure \@ref(fig:trivia-rfig)). 
@@ -791,7 +784,7 @@ fit_da_res <- reg_to_res(zroc_da)
 fit_zg_res <- reg_to_res(zroc_auc_gamma)
 ```
 
-```{r trivia-ctab}
+```{r trivia-ctab, results = 'asis'}
 tmp <- trivia_metrics %>%
   gather(key, value, gamma_old, zroc_da, zroc_auc_gamma) %>%
   left_join(new_names) %>%
@@ -806,9 +799,8 @@ tab <- group_modify(
   select(condition, Metric, result) %>%
   ungroup() %>%
   pivot_wider(names_from = c(Metric), values_from = result)
-kable(
+apa_table(
   tab, 
-  booktabs = TRUE,
   caption = "Correlation between general information test performance and three metrics of metacognitive resolution in Experiment 2."
   )
 ```
