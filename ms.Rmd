@@ -36,7 +36,10 @@ draft             : no
 
 documentclass     : "apa6"
 classoption       : "man"
+always_allow_html: true
 output: 
+  papaja::apa6_docx:
+    default
   papaja::apa6_pdf:
     keep_tex: false
 ---
@@ -57,6 +60,7 @@ library(glue)
 library(ordinal)
 library(beepr)
 library(parallel)
+library(kableExtra)
 opts_chunk$set(
   echo = FALSE,
   warning = FALSE,
@@ -230,7 +234,7 @@ tab <- math_metrics %>%
   select(Experiment, N, Metric, result) %>%
   spread(Metric, result) %>%
   select(Experiment, N, `Proportion Correct`, everything())
-kable(
+papaja::apa_table(
   tab,
   booktabs = TRUE,
   escape = FALSE,
@@ -722,17 +726,15 @@ tmp2 <- trivia_metrics %>%
   spread(Metric, result) %>%
   select(condition, `Proportion Correct`, `Mean confidence`, everything())
 bind_rows(tmp2, tmp1) %>% 
-  kable(
-    booktabs = TRUE,
+  papaja::apa_table(
     escape = FALSE,
     caption = "Measures of general information test performance and metacognition in Experiment 2. Numbers indicate means with 95\\% CIs in square brackets."
-  ) %>% 
-  kable_styling(latex_options = "scale_down")
+  )
 ```
 
 We then turned to the second part of our hypothesis; that resolution would be spuriously correlated to performance in a 2AFC task. To answer, we correlated the three resolution metrics to performance, separately in the two conditions, again using the nonparametric tau correlation. The correlation was significant for each of the three resolution metrics in the 2AFC condition. However, it was much smaller in the free response condition, where it was only significant for the concordant-discordant pairs based gamma. These scatterplots are shown in Figure \@ref(fig:trivia-rfig). 
 
-```{r trivia-ctab}
+```{r trivia-ctab, results = 'asis'}
 tmp <- trivia_metrics %>%
   gather(key, value, gamma_old, zroc_da, zroc_auc_gamma) %>%
   left_join(new_names) %>%
@@ -747,9 +749,8 @@ tab <- group_modify(
   select(condition, Metric, result) %>%
   ungroup() %>%
   pivot_wider(names_from = c(Metric), values_from = result)
-kable(
-  tab, 
-  booktabs = TRUE,
+papaja::apa_table(
+  tab,
   caption = "Correlation between general information test performance and three metrics of metacognitive resolution in Experiment 2."
   )
 ```
