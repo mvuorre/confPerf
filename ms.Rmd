@@ -1,34 +1,27 @@
 ---
 title             : "On the relation between metacognitive monitoring and domain knowledge"
 shorttitle        : "Metacognitive resolution and domain knowledge"
-
 author: 
   - name          : "Matti Vuorre"
     affiliation   : "1"
     corresponding : yes
-    address       : "Oxford Internet Institute, University of Oxford
-1 St Giles Oxford OX1 3JS United Kingdom"
+    address       : "Oxford Internet Institute, University of Oxford 1 St Giles Oxford OX1 3JS United Kingdom"
     email         : "matti.vuorre@oii.ox.ac.uk"
   - name          : "Janet Metcalfe"
     affiliation   : "2"
-
 affiliation:
   - id            : "1"
     institution   : "Oxford Internet Institute, University of Oxford"
   - id            : "2"
     institution   : "Columbia University"
-
 authornote: |
   This research was supported, in part, by Institute of Education Science grant (R305A150467) awarded to JM. The authors are solely responsible for the content of this article. The data and analysis code supporting this manuscript are available at https://osf.io/np3cu/.
-
 abstract: |
-  Metacognitive resolution refers to people's ability to tell their correct answers apart from incorrect answers, and is theorized an important factor in learning. Resolution---the trial-by-trial association between response accuracy and metacognitive endorsement of that response's accuracy---is a distinct ability from knowledge in the domain of testing, and instead indicates a higher-order self-evaluation of one's cognitive states. It is therefore important that measures of resolution are independent of domain knowledge. We conducted six experiments that revealed a robust positive correlation between metacognitive resolution and performance in multiple-choice mathematics testing. A simulation study suggested that resolution metrics are increasingly negatively biased with decreasing performance, because multiple-choice tasks permit correct guessing. Therefore, the observed positive correlation was likely an artifact rather than a true correlation between psychological abilities. Finally, an experiment supported the guessing-related confound hypothesis: Resolution and performance were positively correlated in multiple-choice testing, but not in free-response testing. This study brings to light a previously underappreciated limitation in assessing metacognitive resolution and its relation to task performance when the criterion task involves guessing.
   
+  Metacognitive resolution refers to people's ability to tell their correct answers apart from incorrect answers, and is theorized an important factor in learning. Resolution---the trial-by-trial association between response accuracy and metacognitive endorsement of that response's accuracy---is a distinct ability from knowledge in the domain of testing, and instead indicates a higher-order self-evaluation of one's cognitive states. It is therefore important that measures of resolution are independent of domain knowledge. We conducted six experiments that revealed a robust positive correlation between metacognitive resolution and performance in multiple-choice mathematics testing. A simulation study suggested that resolution metrics are increasingly negatively biased with decreasing performance, because multiple-choice tasks permit correct guessing. Therefore, the observed positive correlation was likely an artifact rather than a true correlation between psychological abilities. Finally, an experiment supported the guessing-related confound hypothesis: Resolution and performance were positively correlated in multiple-choice testing, but not in free-response testing. This study brings to light a previously underappreciated limitation in assessing metacognitive resolution and its relation to task performance when the criterion task involves guessing.
 keywords          : "metacognition, confidence, measurement"
 wordcount         : "`r wordcountaddin::word_count()`"
-
 bibliography      : "references.bib"
-
 floatsintext      : yes
 figurelist        : no
 tablelist         : no
@@ -36,13 +29,12 @@ footnotelist      : no
 linenumbers       : no
 mask              : no
 draft             : no
-
 documentclass     : "apa6"
 classoption       : "man"
 always_allow_html: true
 output: 
   papaja::apa6_docx:
-    default
+    keep_tex: false
   papaja::apa6_pdf:
     keep_tex: false
 ---
@@ -86,8 +78,6 @@ pvalue <- function(x) {
   out
 }
 ```
-
-# Introduction
 
 To successfully improve learning, it is important that people are able to monitor what they know and what they don't know [@BjorkMemoryMetamemoryConsiderations1994; @FlavellMetacognitioncognitivemonitoring1979; @MetcalfeMetacognitiveJudgmentsControl2009; @NelsonMetamemoryTheoreticalFramework1990; @NelsonUtilizationMetacognitiveJudgments1994]. This metacognitive monitoring and knowledge, when accurate, may be used to select appropriate items for further study or to seek assistance to improve comprehension. To paraphrase the oft-quoted adage: If you don't know what you don't know, you can't fix it. It is therefore of paramount importance that people be metacognitively accurate in all fields of study. 
 
